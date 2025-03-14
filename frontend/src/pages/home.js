@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Card } from 'flowbite-react';
 import { useNavigate } from "react-router-dom";
+import bgImage from '../assets/images/shrilanka-tea-estates.jpg';
 
 
 function Home() {
@@ -8,7 +9,7 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-700 p-8">
+    <div className="min-h-screen flex items-center justify-center p-8 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
     <div className="bg-white p-10 rounded-2xl shadow-xl max-w-4xl w-full flex">
       {/* Left Section */}
       <div className="w-1/2 pr-8 flex flex-col justify-center">

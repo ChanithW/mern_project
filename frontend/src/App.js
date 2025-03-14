@@ -4,7 +4,6 @@ import Home from "./pages/home.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminLogin from "./pages/AdminLogin.js";
 
-
 function App() {
   return (
 <StrictMode>
