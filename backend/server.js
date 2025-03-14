@@ -1,17 +1,17 @@
 //server.js
 
-const http = require('http');
+const express = require('express');
+const connectDB = require('./db'); // Import the DB connection
+require('dotenv').config(); // Load environment variables
 
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-    res.write('Hello, World!');
+// Connect to MongoDB
+connectDB();
 
-    res.end();
-});
-
-server.listen(5000, () => {
-    console.log('Server is running on port 5000');
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 
