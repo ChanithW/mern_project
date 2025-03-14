@@ -1,7 +1,7 @@
 //server.js
 
 const express = require('express');
-const connectDB = require('./db'); // Import the DB connection
+const connectDB = require('./database/db'); // Import the DB connection
 require('dotenv').config(); // Load environment variables
 
 const app = express();
