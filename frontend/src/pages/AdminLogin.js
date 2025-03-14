@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Label, TextInput, Card } from "flowbite-react";
+import bgImage from '../assets/images/shrilanka-tea-estates.jpg';
 
 function AdminLogin() {
 
@@ -26,7 +27,7 @@ function AdminLogin() {
   
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
       <Card className="w-96 p-6">
         <h2 className="text-2xl font-bold text-center mb-4">Admin Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
