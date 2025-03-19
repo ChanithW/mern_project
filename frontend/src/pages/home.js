@@ -47,7 +47,7 @@ function Home() {
             <Button className="bg-green-500 text-white w-full py-2" href="/orders">
               Order and Delivery Management
             </Button>
-            <Button className="bg-green-500 text-white w-full py-2" href="/finance">
+            <Button className="bg-green-500 text-white w-full py-2" href="/finance-login">
               Finance Management
             </Button>
           </div>
