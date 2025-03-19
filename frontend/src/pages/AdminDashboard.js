@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Modal } from "flowbite-react";
+import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState(null);
   const navigate = useNavigate();
+  const Swal = require("sweetalert2");
 
   // Fetch users from backend
   useEffect(() => {
@@ -17,14 +16,32 @@ const AdminDashboard = () => {
       .catch((err) => console.error(err));
   }, []);
 
+  const handleDeleteConfirmation = (userId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleDelete(userId);
+      }
+    });
+  };
   // Handle user deletion
-  const handleDelete = () => {
+  const handleDelete = (userId) => {
     axios
-      .delete(`http://localhost:5000/api/users/${deleteUserId}`)
+      .delete(`http://localhost:5000/api/users/${userId}`)
       .then(() => {
-        setUsers(users.filter((user) => user._id !== deleteUserId));
-        setOpenModal(false);
-        alert("User deleted successfully!");
+        setUsers(users.filter((user) => user._id !== userId));
+        Swal.fire({
+          title: "Deleted!",
+          text: "User has been deleted.",
+          icon: "success",
+        });
       })
       .catch((err) => console.error(err));
   };
@@ -42,21 +59,21 @@ const AdminDashboard = () => {
         </div>
         <div className="mt-6 space-y-4">
           <Button
-            className="w-full bg-green-500 text-black w-full py-2 mt-4"
+            className="w-full bg-green-600 text-white w-full py-2 mt-4 hover:bg-green-700"
             color="gray"
             onClick={() => navigate("/")}
           >
             🏠 Home
           </Button>
           <Button
-            className="w-full bg-green-500 text-black w-full py-2 mt-4"
+            className="w-full bg-green-600 text-white w-full py-2 mt-4 hover:bg-green-700"
             color="gray"
             onClick={() => navigate("/add-user")}
           >
             ➕ Add New User
           </Button>
           <Button
-            className="w-full bg-red-400 text-black w-full py-2 mt-4"
+            className="w-full bg-red-600 text-white w-full py-2 mt-4 hover:bg-red-700"
             color="failure"
             onClick={() => navigate("/admin-login")}
           >
@@ -71,7 +88,7 @@ const AdminDashboard = () => {
 
         <table className="w-full border-collapse border border-black">
           <thead>
-            <tr className="bg-green-200 border border-black">
+            <tr className="bg-green-600 text-white">
               <th className="border border-black p-2">Name</th>
               <th className="border border-black p-2">Role</th>
               <th className="border border-black p-2">Email</th>
@@ -82,22 +99,29 @@ const AdminDashboard = () => {
           <tbody>
             {users.length > 0 ? (
               users.map((user) => (
-                <tr key={user._id} className="text-center border border-black">
+                <tr
+                  key={user._id}
+                  className="text-center border border-black bg-green-50 hover:bg-green-200"
+                >
                   <td className="border border-black p-2">{user.name}</td>
                   <td className="border border-black p-2">{user.role}</td>
                   <td className="border border-black p-2">{user.email}</td>
                   <td className="border border-black p-2">{user.username}</td>
                   <td className="border border-black p-2">
-                    <Button className="px-5 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 mr-2" onClick={() => navigate(`/edit-user/${user._id}`)}>
-                      Edit
-                    </Button>
-                    <Button className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700" onClick={() => {
-                        setDeleteUserId(user._id);
-                        setOpenModal(true);
-                      }}
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex justify-center space-x-2">
+                      <Button
+                        className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+                        onClick={() => navigate(`/edit-user/${user._id}`)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700"
+                        onClick={() => handleDeleteConfirmation(user._id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -113,20 +137,6 @@ const AdminDashboard = () => {
             )}
           </tbody>
         </table>
-
-        {/* Delete Confirmation Modal */}
-        <Modal show={openModal} onClose={() => setOpenModal(false)}>
-          <Modal.Header>Confirm Delete</Modal.Header>
-          <Modal.Body>Are you sure you want to delete this user?</Modal.Body>
-          <Modal.Footer>
-            <Button color="failure" onClick={handleDelete}>
-              Yes, Delete
-            </Button>
-            <Button color="gray" onClick={() => setOpenModal(false)}>
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal>
       </div>
     </div>
   );

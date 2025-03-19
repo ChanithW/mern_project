@@ -15,6 +15,12 @@ import FDMdRecordsEdit from "./pages/FDMdRecordsEdit.js";
 import Aboutus from "./pages/Aboutus.js"
 import FAQ from "./pages/FAQ.js";
 import FDMfemail from "./pages/FDMfemail"
+import AddUsers from "./pages/AddUsers";
+import EditUser from "./pages/EditUser";
+import FinanceLogin from "./pages/FMLogin.js";
+import FMRead from "./pages/FMRead.js";
+import FMCreate from "./pages/FMCreate.js";
+
 
 function App() {
   return (
@@ -36,6 +42,12 @@ function App() {
       <Route path="/faq" element={<FAQ/>} />
       <Route path="/fdm-femail" element={<FDMfemail/>} />
 
+      <Route path="/add-user" element={<AddUsers />} />
+      <Route path="/edit-user/:id" element={<EditUser />} />
+
+      <Route path="/finance-login" element={<FinanceLogin />} />
+      <Route path="/finance-dashboard" element={<FMRead />} />
+      <Route path="/add-finance" element={<FMCreate />} />
     </Routes>
   </Router>
 </StrictMode>
