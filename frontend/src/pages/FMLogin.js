@@ -4,33 +4,28 @@ import { useNavigate } from "react-router-dom";
 import { Button, Label, TextInput, Card } from "flowbite-react";
 import bgImage from '../assets/images/shrilanka-tea-estates.jpg';
 
-function AdminLogin() {
+function FinanceLogin() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const Swal = require("sweetalert2");
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Admin Login Attempt:", { username, password });
-    // Redirect to admin dashboard (to be implemented)
-    navigate("/admin-dashboard");
+    console.log("Finance Login Attempt:", { username, password });
 
-    if (username === "admin" && password === "admin123") {
-        navigate("/admin-dashboard"); // Redirect to the admin dashboard
+    if (username === "finance" && password === "finance123") {
+        navigate("/finance-dashboard"); // Redirect to the finance dashboard
     } else {
-        Swal.fire("Invalid username or password");
-        navigate("/admin-login"); // Redirect to the admin login page
+        alert("Invalid username or password");
+        navigate("/finance-login"); // Stay on the finance login page
     }
   };
-
-  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
       <Card className="w-96 p-6">
-        <h2 className="text-2xl font-bold text-center mb-4">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center mb-4">Finance Management Login</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <Label htmlFor="username" value="Username" />
@@ -60,7 +55,7 @@ function AdminLogin() {
         </form>
       </Card>
     </div>
-  )
+  );
 }
 
-export default AdminLogin
+export default FinanceLogin;

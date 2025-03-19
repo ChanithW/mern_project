@@ -26,7 +26,7 @@ function Home() {
           <Button className="bg-green-500 text-white w-full py-2" href="/inventory">Inventory Management</Button>
           <Button className="bg-green-500 text-white w-full py-2" href="/employees">Employee Management</Button>
           <Button className="bg-green-500 text-white w-full py-2" href="/orders">Order and Delivery Management</Button>
-          <Button className="bg-green-500 text-white w-full py-2" href="/finance">Finance Management</Button>
+          <Button className="bg-green-500 text-white w-full py-2" href="/finance-login">Finance Management</Button>
         </div>
       </Card>
     </div>
