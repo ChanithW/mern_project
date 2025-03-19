@@ -4,6 +4,9 @@ import Home from "./pages/home.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminLogin from "./pages/AdminLogin.js";
 import AdminDashboard from "./pages/AdminDashboard.js";
+import IMStoring from "./pages/IMStoring.js"; //Amath
+import IMLogin from "./pages/IMLogin.js"; //Amath
+
 import FDMLogin from "./pages/FDMLogin.js";
 import FDMdashBoard from "./pages/FDMdashBoard.js";
 import FDMscheduleRead from "./pages/FDMscheduleRead.js";
@@ -30,6 +33,8 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/admin-login" element={<AdminLogin />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/IMLogin" element={<IMLogin />} /*Amath*/ />
+      <Route path="/IMStoring" element={<IMStoring/>}/*Amath*/ />
       <Route path="/fdm-login" element={<FDMLogin />} />
       <Route path="/fdm-dashboard" element={<FDMdashBoard />} />
       <Route path="/fdm-scheduleRead" element={<FDMscheduleRead />} />

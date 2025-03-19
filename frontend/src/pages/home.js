@@ -38,7 +38,7 @@ function Home() {
             <Button className="bg-green-500 text-white w-full py-2" href="/fdm-login">
               Fertilization & Disease Management
             </Button>
-            <Button className="bg-green-500 text-white w-full py-2" href="/inventory">
+            <Button className="bg-green-500 text-white w-full py-2" onClick={() => navigate("/IMLogin")}>
               Inventory Management
             </Button>
             <Button className="bg-green-500 text-white w-full py-2" href="/employees">

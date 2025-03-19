@@ -1,6 +1,9 @@
 const express = require('express');
 const connectDB = require('./database/db'); // Import the DB connection
-require('dotenv').config(); 
+const router = require("./routes/IMStoreRouter");
+const routerdisptcher = require("./routes/IMDispatchRouter");
+require('dotenv').config(); // Load environment variables
+
 
 const cors = require("cors");
 const userController = require("./controller/userController");
@@ -23,6 +26,14 @@ app.get("/api/users/:id",userController.getUserById)
 app.post("/api/users", userController.addUser);
 app.put("/api/users/:id", userController.editUser);
 app.delete("/api/users/:id", userController.deleteUser);
+
+//IM - Amath
+app.use(express.json());
+app.use("/tstock",router);
+//IM DS - Amath
+app.use(express.json());
+app.use("/tdispatch", routerdisptcher);
+
 
 //chim-schedules
 app.post("/api/createschedule",fdmController.createSchedule);
