@@ -2,7 +2,9 @@ const Finance = require("../model/FMmodel");
 const fs = require("fs");
 const { Parser } = require("json2csv");
 
-exports.getAllRecords = async (req, res) => {
+
+// Get all finance records
+exports.getAllFinanceRecords = async (req, res) => {
   try {
     const records = await Finance.find();
     res.status(200).json(records);
@@ -11,7 +13,21 @@ exports.getAllRecords = async (req, res) => {
   }
 };
 
-exports.addRecord = async (req, res) => {
+// Get a single finance record by ID
+exports.getFinanceRecordById = async (req, res) => {
+  try {
+    const record = await Finance.findById(req.params.id);
+    if (!record) {
+      return res.status(404).json({ message: "Record not found" });
+    }
+    res.status(200).json(record);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching record", error });
+  }
+};
+
+// Add a new finance record
+exports.addFinanceRecord = async (req, res) => {
   try {
     const { date, name, type, value } = req.body;
     const newRecord = new Finance({ date, name, type, value });
@@ -19,6 +35,32 @@ exports.addRecord = async (req, res) => {
     res.status(201).json({ message: "Record added successfully", newRecord });
   } catch (error) {
     res.status(400).json({ message: "Error adding record", error });
+  }
+};
+
+//Update an existing finance record
+exports.updateFinanceRecord = async (req, res) => {
+  try {
+    const updatedRecord = await Finance.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedRecord) {
+      return res.status(404).json({ message: "Record not found" });
+    }
+    res.status(200).json({ message: "Record updated successfully", updatedRecord });
+  } catch (error) {
+    res.status(400).json({ message: "Error updating record", error });
+  }
+};
+
+// Delete a finance record
+exports.deleteFinanceRecord = async (req, res) => {
+  try {
+    const deletedRecord = await Finance.findByIdAndDelete(req.params.id);
+    if (!deletedRecord) {
+      return res.status(404).json({ message: "Record not found" });
+    }
+    res.status(200).json({ message: "Record deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting record", error });
   }
 };
 

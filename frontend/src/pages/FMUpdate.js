@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "flowbite-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const FMCreate = () => {
+const FMUpdate = () => {
+  const { id } = useParams(); // Get ID from URL
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     date: "",
     name: "",
@@ -11,30 +13,38 @@ const FMCreate = () => {
     value: "",
   });
 
-  const navigate = useNavigate();
+  // Fetch existing data for the selected record
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/finance/${id}`)
+      .then((res) => setFormData(res.data))
+      .catch((err) => console.error("Error fetching record:", err));
+  }, [id]);
 
+  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/finance", formData);
-      alert("Record added successfully!");
+      await axios.put(`http://localhost:5000/api/finance/${id}`, formData);
+      alert("Record updated successfully!");
       navigate("/finance-dashboard");
     } catch (error) {
-      console.error("Error adding record:", error);
-      alert("Failed to add record.");
+      console.error("Error updating record:", error);
+      alert("Failed to update record.");
     }
   };
 
   return (
-    <div className="p-6 bg-green-100 min-h-screen">
-      
+    <div className="flex h-screen bg-gray-100">
+
       <div className="w-full p-6 bg-green-100 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 border-2 border-green-500">
-          <h2 className="text-2xl font-bold mb-4 text-center">Add New Finance Record</h2>
+        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
+          <h2 className="text-2xl font-bold mb-4">Update Finance Record</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block font-semibold">Date</label>
@@ -66,9 +76,8 @@ const FMCreate = () => {
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
               >
-                <option value="" disabled selected>select a type</option>
-                <option value="income">income</option>
-                <option value="expense">expense</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
               </select>
             </div>
             <div>
@@ -82,11 +91,8 @@ const FMCreate = () => {
                 required
               />
             </div>
-            <Button
-              type="submit"
-              className="w-full bg-green-600 text-white px-4 py-2 hover:bg-green-700"
-            >
-              ➕ Add Record
+            <Button type="submit" className="w-full bg-green-600 text-white px-4 py-2 hover:bg-green-700">
+              🔄 Update Record
             </Button>
           </form>
         </div>
@@ -95,4 +101,4 @@ const FMCreate = () => {
   );
 };
 
-export default FMCreate;
+export default FMUpdate;

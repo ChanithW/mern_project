@@ -50,16 +50,13 @@ app.put("/api/updaterecord/:id", fdmdController.updateRecord); // Update record
 app.delete("/api/deleterecord/:id", fdmdController.deleteRecord);
 
 
-
-
-
-
-
-app.get("/api/finance", financeController.getAllRecords);
-app.post("/api/finance", financeController.addRecord);
-app.get("/api/finance/download", financeController.downloadReport);
-/* app.put("/api/finance/:id", financeController.editRecord);
-app.delete("/api/finance/:id", financeController.deleteRecord); */
+//finance management
+app.get("/api/finance", financeController.getAllFinanceRecords);
+app.get("/api/finance/download", financeController.downloadReport);//report download
+app.get("/api/finance/:id", financeController.getFinanceRecordById); // Fetch one record
+app.post("/api/finance", financeController.addFinanceRecord);
+app.put("/api/finance/:id", financeController.updateFinanceRecord);
+app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
 
 app.listen(PORT, () => {
   console.log(`Server running on port. ${PORT}`);

@@ -22,7 +22,7 @@ exports.addUser = async (req, res) => {
   }
 };
 
-//new part from chatGPT
+//get user by id
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

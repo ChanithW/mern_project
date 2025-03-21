@@ -23,6 +23,8 @@ import EditUser from "./pages/EditUser";
 import FinanceLogin from "./pages/FMLogin.js";
 import FMRead from "./pages/FMRead.js";
 import FMCreate from "./pages/FMCreate.js";
+import FMUpdate from "./pages/FMUpdate.js";
+import FMDelete from "./pages/FMDelete.js";
 
 
 function App() {
@@ -53,6 +55,8 @@ function App() {
       <Route path="/finance-login" element={<FinanceLogin />} />
       <Route path="/finance-dashboard" element={<FMRead />} />
       <Route path="/add-finance" element={<FMCreate />} />
+      <Route path="/edit-finance/:id" element={<FMUpdate />} />
+      <Route path="/delete-finance/:id" element={<FMDelete />} />
     </Routes>
   </Router>
 </StrictMode>
