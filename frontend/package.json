@@ -12,7 +12,7 @@
     "chart.js": "^4.4.8",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.5.0",
-    "jspdf": "^3.0.0",
+    "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
@@ -20,7 +20,8 @@
     "react-router-dom": "^7.3.0",
     "react-scripts": "5.0.1",
     "sweetalert2": "^11.17.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",

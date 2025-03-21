@@ -14,10 +14,10 @@ function IMLogin() {
     e.preventDefault();
     console.log("Admin Login Attempt:", { username, password });
     // Redirect to admin dashboard (to be implemented)
-    navigate("/IMStoring");
+    navigate("/IMDashboard");
 
     if (username === "IMadmin" && password === "IM@123") {
-        navigate("/IMStoring"); // Redirect to the admin dashboard
+        navigate("/IMDashboard"); // Redirect to the admin dashboard
     } else {
         alert("Invalid username or password");
         navigate("/IMLogin"); // Redirect to the admin login page

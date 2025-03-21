@@ -3,6 +3,8 @@ import axios from "axios";
 import { Button, Label, TextInput, Card } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import ApexCharts from "react-apexcharts";
+import * as XLSX from "xlsx";
+import "jspdf-autotable"
 
 export default function IMStoring() {
   const [formData, setFormData] = useState({ Date: "", totalAmount: "" });
@@ -53,9 +55,16 @@ export default function IMStoring() {
   };
 
   const handleEdit = (id) => {
-    navigate(`/edit-stock/${id}`);
+    navigate(`/IMStoringEdit/${id}`);
   };
 
+  const handleDownloadExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(tStock);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
+    XLSX.writeFile(wb, "Stock_Data.xlsx");
+  };
+  
   const filteredTStock = tStock.filter((stock) => stock.Date.startsWith(searchDate));
 
   const chartOptions = {
@@ -133,6 +142,10 @@ export default function IMStoring() {
               )}
             </tbody>
           </table>
+        </div>
+        {/* Download Buttons */}
+        <div className="flex justify-end space-x-4 mt-4">
+          <Button onClick={handleDownloadExcel} className="bg-green-500 text-white">Download Excel</Button>
         </div>
       </div>
     </div>

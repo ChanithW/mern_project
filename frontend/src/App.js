@@ -6,6 +6,10 @@ import AdminLogin from "./pages/AdminLogin.js";
 import AdminDashboard from "./pages/AdminDashboard.js";
 import IMStoring from "./pages/IMStoring.js"; //Amath
 import IMLogin from "./pages/IMLogin.js"; //Amath
+import IMDispatch from "./pages/IMDispatch.js"; //Amath
+import IMDashboard from "./pages/IMDashboard.js"; //Amath
+import IMStoringEdit from "./pages/IMStoringEdit.js"; //Amath
+import IMDispatchEdit from "./pages/IMDispatchEdit.js"; //Amath
 
 import FDMLogin from "./pages/FDMLogin.js";
 import FDMdashBoard from "./pages/FDMdashBoard.js";
@@ -35,6 +39,10 @@ function App() {
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/IMLogin" element={<IMLogin />} /*Amath*/ />
       <Route path="/IMStoring" element={<IMStoring/>}/*Amath*/ />
+      <Route path="/IMDispatch" element={<IMDispatch/>} /*Amath*/ />
+      <Route path="/IMDashboard" element={<IMDashboard/>} /*Amath*/ />
+      <Route path="/IMStoringEdit/:id" element={<IMStoringEdit/>} /*Amath*/ />
+      <Route path="/IMDispatchEdit/:id" element={<IMDispatchEdit/>} /*Amath*/ />
       <Route path="/fdm-login" element={<FDMLogin />} />
       <Route path="/fdm-dashboard" element={<FDMdashBoard />} />
       <Route path="/fdm-scheduleRead" element={<FDMscheduleRead />} />
