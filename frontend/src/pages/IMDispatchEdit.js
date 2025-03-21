@@ -57,11 +57,11 @@ export default function IMStoringEdit() {
         {tDispatch ? (
           <div className="mb-4 p-4 bg-gray-50 rounded-lg shadow-md">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">Current Stock Details</h3>
-            <p><strong>Total Amount:</strong> {tDispatch.StockId || "N/A"}</p>
+            <p><strong>Stock ID:</strong> {tDispatch.StockId || "N/A"}</p>
             <p><strong>Date:</strong> {tDispatch.Date ? new Date(tDispatch.Date).toLocaleDateString() : "N/A"}</p>
-            <p><strong>Total Amount:</strong> {tDispatch.Qty || "N/A"}</p>
-            <p><strong>Total Amount:</strong> {tDispatch.Driver || "N/A"}</p>
-            <p><strong>Total Amount:</strong> {tDispatch.Location || "N/A"}</p>
+            <p><strong>Quantitiy:</strong> {tDispatch.Qty || "N/A"}</p>
+            <p><strong>Driver:</strong> {tDispatch.Driver || "N/A"}</p>
+            <p><strong>Location:</strong> {tDispatch.Location || "N/A"}</p>
           </div>
         ) : (
           <p className="text-red-500 text-center">No details available</p>
