@@ -3,11 +3,13 @@ import axios from "axios";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/header";
+import Chart from "react-apexcharts";
 
 const FMRead = () => {
   const [records, setRecords] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     axios
@@ -35,6 +37,14 @@ const FMRead = () => {
       .catch((err) => console.error("Error downloading file:", err));
   };
 
+  //fetching from back
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/finance")
+      .then((res) => setTransactions(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
   // Filter records based on search query
   const filteredRecords = records.filter((record) => {
     const searchLower = search.toLowerCase();
@@ -56,6 +66,45 @@ const FMRead = () => {
   const totalIncome = incomes.reduce((sum, record) => sum + record.value, 0);
   const totalExpense = expenses.reduce((sum, record) => sum + record.value, 0);
 
+  // Calculate total income, expenses, and balance
+  const totalIncomes = transactions
+    .filter((t) => t.type === "income")
+    .reduce((sum, t) => sum + t.value, 0);
+
+  const totalExpenses = transactions
+    .filter((t) => t.type === "expense")
+    .reduce((sum, t) => sum + t.value, 0);
+
+  const balance = totalIncomes - totalExpenses;
+
+  //chart from apexChart.js
+  const chartOptions = {
+    chart: {
+      type: "bar",
+    },
+    xaxis: {
+      categories: ["Incomes", "Expenses"],
+    },
+    colors: ["#4CAF50", "#F44336"],
+    //toensure color is applied properly
+    plotOptions: {
+      bar: {
+        distributed: true,
+      },
+    },
+    title: {
+      text: "Financial Overview",
+      align: "center",
+    },
+  };
+
+  const chartSeries = [
+    {
+      name: "Amount",
+      data: [totalIncomes, totalExpenses],
+    },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -65,7 +114,6 @@ const FMRead = () => {
           <div>
             <h2 className="mt-3 text-3xl font-bold">Finance Dashboard</h2>
             <br></br>
-
             <div className="mb-4 flex space-x-2">
               <input
                 type="text"
@@ -86,7 +134,6 @@ const FMRead = () => {
                 ➕ Add New Record
               </Button>
             </div>
-
             <table className="w-full border-collapse border border-black">
               <thead>
                 <tr className="bg-green-600 text-white">
@@ -208,7 +255,39 @@ const FMRead = () => {
               </tbody>
             </table>
             <br></br>
-            <h1>hello</h1>
+            {/* new dev to add chart and summary calculation */}
+            <div className="flex gap-2">
+              <div className="w-1/3 h-1/4 mt-6 p-4 bg-white border border-black rounded-lg">
+                <h3 className="text-3xl font-bold">Financial Summary</h3>
+                <br></br>
+                <p className="text-green-600 font-bold text-xl">
+                  Total Income: LKR{totalIncomes.toFixed(2)}
+                </p>
+                <p className="text-red-600 font-bold text-xl">
+                  Total Expenses: LKR{totalExpenses.toFixed(2)}
+                </p>
+                <br></br>
+                <p
+                  className={`text-2xl font-bold ${
+                    balance >= 0 ? "text-green-700" : "text-red-700"
+                  }`}
+                >
+                  Balance: LKR{balance.toFixed(2)}
+                </p>
+              </div>
+              {/* finance chart from apexchart.js*/}
+              <div className="w-2/3 mt-6 p-4 bg-white border border-black rounded-lg">
+              <h3 className="text-2xl font-semibold mb-2">Financial Summary Chart</h3>
+              <Chart
+                options={chartOptions}
+                series={chartSeries}
+                type="bar"
+                height={350}
+              />
+            </div>
+            </div>
+            
+            
           </div>
         </div>
       </div>
