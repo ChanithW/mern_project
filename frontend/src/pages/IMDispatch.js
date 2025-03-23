@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ApexCharts from "react-apexcharts";
 import * as XLSX from "xlsx";
 import "jspdf-autotable"
+import Header from '../components/header';
 
 export default function IMDispatch() {
   const [formData, setFormData] = useState({ StockId: "", Date: "", Qty: "", Driver: "", Location: "" });
@@ -74,6 +75,8 @@ export default function IMDispatch() {
   };
 
   return (
+    <div className="min-h-screen flex flex-col">
+    <Header />
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-10 space-y-6">
       <div className="flex w-full max-w-6xl space-x-6">
         {/* Add Stock Form */}
@@ -166,6 +169,7 @@ export default function IMDispatch() {
                   <Button onClick={handleDownloadExcel} className="bg-green-500 text-white">Download Excel</Button>
                 </div>
       </div>
+    </div>
     </div>
   );
 }

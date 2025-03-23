@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, Label, TextInput, Card } from "flowbite-react";
 import { useNavigate, useParams } from "react-router-dom";
+import Header from '../components/header';
 
 export default function IMStoringEdit() {
   const { id } = useParams();
@@ -46,6 +47,8 @@ export default function IMStoringEdit() {
   };
 
   return (
+    <div className="min-h-screen flex flex-col">
+    <Header />
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
       <Card className="w-full max-w-lg p-6">
         <h2 className="text-2xl font-bold text-center mb-4">Edit Stock Record</h2>
@@ -75,6 +78,7 @@ export default function IMStoringEdit() {
           </Button>
         </form>
       </Card>
+    </div>
     </div>
   );
 }
