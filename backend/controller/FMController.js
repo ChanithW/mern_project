@@ -26,11 +26,11 @@ exports.getFinanceRecordById = async (req, res) => {
   }
 };
 
-// Add a new finance record
+// Add a new finance record  
 exports.addFinanceRecord = async (req, res) => {
   try {
-    const { date, name, type, value } = req.body;
-    const newRecord = new Finance({ date, name, type, value });
+    const { date, name, type, value } = req.body;  
+    const newRecord = new Finance({ date, name, type, value });  
     await newRecord.save();
     res.status(201).json({ message: "Record added successfully", newRecord });
   } catch (error) {

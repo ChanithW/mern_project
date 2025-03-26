@@ -4,7 +4,9 @@ import { Button } from "flowbite-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const FMUpdate = () => {
-  const { id } = useParams(); // Get ID from URL
+  
+  const { id } = useParams(); // Get ID
+  
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     date: "",
@@ -13,7 +15,7 @@ const FMUpdate = () => {
     value: "",
   });
 
-  // Fetch existing data for the selected record
+  // Fetch existing data
   useEffect(() => {
     axios
       .get(`http://localhost:5000/api/finance/${id}`)

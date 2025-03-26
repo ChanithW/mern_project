@@ -63,8 +63,8 @@ const FMRead = () => {
   );
 
   // Calculate totals
-  const totalIncome = incomes.reduce((sum, record) => sum + record.value, 0);
-  const totalExpense = expenses.reduce((sum, record) => sum + record.value, 0);
+  /* const totalIncome = incomes.reduce((sum, record) => sum + record.value, 0);
+  const totalExpense = expenses.reduce((sum, record) => sum + record.value, 0); */
 
   // Calculate total income, expenses, and balance
   const totalIncomes = transactions
@@ -186,8 +186,10 @@ const FMRead = () => {
                     </td>
                   </tr>
                 ))}
-                {/* Total Incomes */}
-                <tr className="bg-yellow-200 font-bold">
+
+
+                {/* total incomes row*/}
+                {/* <tr className="bg-yellow-200 font-bold">
                   <td
                     className="border border-black p-2 text-right"
                     colSpan="3"
@@ -197,7 +199,9 @@ const FMRead = () => {
                   <td className="border border-black p-2">
                     {totalIncome.toFixed(2)}
                   </td>
-                </tr>
+                </tr> */}
+
+
 
                 {/* Expenses Section */}
                 <tr className="bg-gray-200">
@@ -240,8 +244,10 @@ const FMRead = () => {
                     </td>
                   </tr>
                 ))}
-                {/* Total Expenses */}
-                <tr className="bg-yellow-200 font-bold">
+
+
+                {/* Total expenses row*/}
+                {/* <tr className="bg-yellow-200 font-bold">
                   <td
                     className="border border-black p-2 text-right"
                     colSpan="3"
@@ -251,9 +257,12 @@ const FMRead = () => {
                   <td className="border border-black p-2">
                     {totalExpense.toFixed(2)}
                   </td>
-                </tr>
+                </tr> */}
+
+
               </tbody>
             </table>
+
             <br></br>
             {/* new dev to add chart and summary calculation */}
             <div className="flex gap-2">
@@ -275,6 +284,7 @@ const FMRead = () => {
                   Balance: LKR{balance.toFixed(2)}
                 </p>
               </div>
+
               {/* finance chart from apexchart.js*/}
               <div className="w-2/3 mt-6 p-4 bg-white border border-black rounded-lg">
               <h3 className="text-2xl font-semibold mb-2">Financial Summary Chart</h3>

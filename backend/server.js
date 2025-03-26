@@ -1,5 +1,5 @@
 const express = require('express');
-const connectDB = require('./database/db'); // Import the DB connection
+const connectDB = require('./database/db'); // Import DB connection
 const router = require("./routes/IMStoreRouter");
 const routerdisptcher = require("./routes/IMDispatchRouter");
 require('dotenv').config(); // Load environment variables
@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB (only once)
 connectDB();
 
-//chan
+//chanith - admin & users
 app.get("/api/users", userController.getAllUsers);
 app.get("/api/users/:id",userController.getUserById)
 app.post("/api/users", userController.addUser);
@@ -50,10 +50,10 @@ app.put("/api/updaterecord/:id", fdmdController.updateRecord); // Update record
 app.delete("/api/deleterecord/:id", fdmdController.deleteRecord);
 
 
-//finance management
+//finance management - chanith
 app.get("/api/finance", financeController.getAllFinanceRecords);
-app.get("/api/finance/download", financeController.downloadReport);//report download
-app.get("/api/finance/:id", financeController.getFinanceRecordById); // Fetch one record
+app.get("/api/finance/download", financeController.downloadReport);//for report download
+app.get("/api/finance/:id", financeController.getFinanceRecordById); // to fetch one rec by id
 app.post("/api/finance", financeController.addFinanceRecord);
 app.put("/api/finance/:id", financeController.updateFinanceRecord);
 app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
