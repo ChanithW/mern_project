@@ -2,6 +2,8 @@ const express = require('express');
 const connectDB = require('./database/db'); // Import the DB connection
 const router = require("./routes/IMStoreRouter");
 const routerdisptcher = require("./routes/IMDispatchRouter");
+//const twilio = require('twilio'); //Amath
+const routeremail = require("./routes/IMEmailRouter");
 require('dotenv').config(); // Load environment variables
 
 
@@ -33,6 +35,9 @@ app.use("/tstock",router);
 //IM DS - Amath
 app.use(express.json());
 app.use("/tdispatch", routerdisptcher);
+//IM Email - Amath
+app.use(express.json());
+app.use("/email", routeremail);
 
 
 //chim-schedules

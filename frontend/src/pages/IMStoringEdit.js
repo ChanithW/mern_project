@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, Label, TextInput, Card } from "flowbite-react";
 import { useNavigate, useParams } from "react-router-dom";
-import Header from '../components/header';
+import bgImage from '../assets/images/bg1.jpg';
 
 export default function IMStoringEdit() {
   const { id } = useParams();
@@ -31,6 +31,13 @@ export default function IMStoringEdit() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+    // Validate Total Amount (Prevent Negative Numbers)
+  if (formData.totalAmount <= 0 || isNaN(formData.totalAmount)) {
+    alert("Total Amount must be a positive number.");
+    return;
+  }
+
     try {
       if (!formData.Date && !formData.totalAmount) return; // Prevent empty request
 
@@ -47,15 +54,13 @@ export default function IMStoringEdit() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-    <Header />
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <Card className="w-full max-w-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-4">Edit Stock Record</h2>
+    <div className="flex justify-center items-center min-h-screen bg-green-200 p-6 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+    <Card className="w-full max-w-lg p-6 border border-green-700 bg-white bg-opacity-70 shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-4">Edit Stock Records</h2>
 
         {/* Show Current Stock Details */}
         {tStock ? (
-          <div className="mb-4 p-4 bg-gray-50 rounded-lg shadow-md">
+          <div className="mb-4 p-4 bg-gray-50 rounded-lg shadow-md ">
             <h3 className="text-lg font-semibold text-gray-700 mb-2">Current Stock Details</h3>
             <p><strong>Date:</strong> {tStock.Date ? new Date(tStock.Date).toLocaleDateString() : "N/A"}</p>
             <p><strong>Total Amount:</strong> {tStock.totalAmount || "N/A"}</p>
@@ -78,7 +83,6 @@ export default function IMStoringEdit() {
           </Button>
         </form>
       </Card>
-    </div>
     </div>
   );
 }
