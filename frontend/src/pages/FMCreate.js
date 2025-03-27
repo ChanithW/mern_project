@@ -44,6 +44,7 @@ const FMCreate = () => {
                 value={formData.date}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
+                max={new Date().toISOString().split("T")[0]} //restrict adding future dates
                 required
               />
             </div>
@@ -51,6 +52,7 @@ const FMCreate = () => {
               <label className="block font-semibold">Transaction Name</label>
               <input
                 type="text"
+                pattern="[A-Za-z\s]+" title="Only letters allowed" //add validation*
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -79,6 +81,7 @@ const FMCreate = () => {
                 value={formData.value}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
+                min="1"
                 required
               />
             </div>
