@@ -32,16 +32,15 @@ export default function IMStoringEdit() {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    // Validate Total Amount (Prevent Negative Numbers)
+    // Validate Total Amount
   if (formData.totalAmount <= 0 || isNaN(formData.totalAmount)) {
     alert("Total Amount must be a positive number.");
     return;
   }
 
     try {
-      if (!formData.Date && !formData.totalAmount) return; // Prevent empty request
+      if (!formData.Date && !formData.totalAmount) return;
 
-      // Create an object with only changed values
       const updatedData = {};
       if (formData.Date) updatedData.Date = formData.Date;
       if (formData.totalAmount) updatedData.totalAmount = Number(formData.totalAmount);

@@ -1,5 +1,4 @@
 const IMDispatchModel = require("../model/IMDispatchModel");
-//const IMstock = require("../model/IMStoreModel");
 //View on postman
 const getDispatch = async (req, res, next) =>{
     let TDispatch;

@@ -9,7 +9,7 @@ export default function IMStoringEdit() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ StockId: "", Date: "", Qty: "", Driver: "", Location: "" });
   const [tDispatch, setTDispatch] = useState(null);
-  const [existingStockIds, setExistingStockIds] = useState([]); // Store all Stock IDs
+  const [existingStockIds, setExistingStockIds] = useState([]);
 
   useEffect(() => {
     const fetchDispatch = async () => {
@@ -57,35 +57,25 @@ export default function IMStoringEdit() {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    // **Validation**
+    // Validation
     if (!formData.StockId || !formData.Date || !formData.Qty || !formData.Driver || !formData.Location) {
       alert("All fields are required!");
       return;
     }
 
-    // **Check for duplicate Stock ID (excluding the current one)**
+    // validate id's
     if (existingStockIds.includes(formData.StockId) && formData.StockId !== tDispatch.StockId) {
       alert("This Stock ID already exists. Please enter a unique Stock ID.");
       return;
     }
 
-    // **Prevent past dates**
-    // **Prevent past dates only if the date is edited**
-//     if (formData.Date !== tDispatch.Date) {
-//       const today = new Date().toISOString().split("T")[0];
-//       if (formData.Date < today) {
-//         alert("Date cannot be in the past.");
-//         return;
-//   }
-// }
-
-    // **Ensure Quantity is not negative**
+    // validate qty
     if (formData.Qty <= 0) {
       alert("Quantity must be a positive number.");
       return;
     }
 
-    // **Validate Driver's Name (only letters allowed)**
+    // validate driver
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(formData.Driver)) {
       alert("Driver name can only contain letters and spaces.");
@@ -100,7 +90,6 @@ export default function IMStoringEdit() {
 
 
     try {
-      // Prepare updated data
       const updatedData = {
         StockId: formData.StockId,
         Date: formData.Date,

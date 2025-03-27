@@ -45,33 +45,33 @@ export default function IMDispatch() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  // Check for duplicate Stock ID
+  // StockID validation
   const isDuplicate = tDispatch.some(dispatch => dispatch.StockId === formData.StockId);
   if (isDuplicate) {
     alert("This Stock ID already exists. Please enter a unique Stock ID.");
     return;
   }
 
-  // Validate Date (Prevent Past Dates)
+  // Date validation
   if (formData.Date < today) {
     alert("You cannot select a past date. Please select today's or a future date.");
     return;
   }
 
-  // Validate Qty (Prevent Negative Numbers)
+  // Validate Qty
   if (formData.Qty <= 0 || isNaN(formData.Qty)) {
     alert("Quantity must be a positive number.");
     return;
   }
 
-  // Validate Driver's Name (only letters allowed)
+  // Validate Driver's Name
   const nameRegex = /^[A-Za-z\s]+$/;
   if (!nameRegex.test(formData.Driver)) {
     alert("Driver name can only contain letters.");
     return;
   }
 
-  // Validate Location (Only Letters, Numbers, and "/")
+  // Validate Location
   const locationRegex = /^[A-Za-z0-9/]+$/;
   if (!locationRegex.test(formData.Location)) {
     alert("Location can only contain letters, numbers, and '/'.");
@@ -101,7 +101,7 @@ export default function IMDispatch() {
       });
 
       alert('Message sent successfully!');
-      window.location.reload();  // Refresh the page after message sent
+      window.location.reload();
     } catch (err) {
       console.error("Failed to send message", err);
       alert("Error sending message.");
@@ -136,7 +136,7 @@ export default function IMDispatch() {
 
   const handleSearchDateChange = (e) => {
     const selectedDate = e.target.value;
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
   
     if (selectedDate > today) {
       alert("Please search for a past date.");
@@ -241,7 +241,6 @@ export default function IMDispatch() {
         <div className="p-4 bg-gray-50 flex justify-end ">
           <Label htmlFor="searchDate" className="mr-4 p-5">Filter by Date:</Label>
           <TextInput id="searchDate" type="date" value={searchDate} onChange={handleSearchDateChange} className="p-2 border rounded" />
-          {/*<TextInput id="searchDate" type="date" value={searchDate} onChange={(e) => setSearchDate(e.target.value)} className="p-2 border rounded" />*/}
         </div>
 
         {/* Scrollable Table */}

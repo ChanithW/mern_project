@@ -4,7 +4,7 @@ import { Card } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import ApexCharts from "react-apexcharts";
 import Header from "../components/header";
-import inventoryImg from "../assets/images/inventory.png"; // Adjust the path based on your structure
+import inventoryImg from "../assets/images/inventory.png";
 import deliveryImg from "../assets/images/delivery.png";
 
 export default function IMDashboard() {
@@ -35,12 +35,12 @@ export default function IMDashboard() {
     fetchDispatchData();
   }, []);
 
-  // Calculate total stock and total dispatched stock
+  // Total Stock and Total Dispatch Calculation
   const totalStock = tStock.reduce((acc, stock) => acc + (stock.totalAmount || 0), 0);
   const totalDispatch = tDispatch.reduce((acc, dispatch) => acc + (dispatch.Qty || 0), 0);
   const currentStock = totalStock - totalDispatch;
 
-  // Determine Stock Status
+  // Stock Status
   const stockStatus = currentStock < 300 ? "Low Stock" : "Sufficient Stock";
   const statusColor = currentStock < 300 ? "text-red-600 font-bold" : "text-green-600 font-bold";
 
@@ -107,11 +107,9 @@ export default function IMDashboard() {
         <div className="grid grid-cols-2 gap-6 w-full max-w-6xl ">
           {/* Storing Inventories Card */}
           <Card className="p-10 bg-green-100 hover:bg-green-300 shadow-md cursor-pointer border border-green-500 relative" onClick={() => navigate("/IMStoring")}>
-            {/* Image positioned at the center-right but a bit left from the edge */}
             <div className="absolute top-1/2 right-10 transform -translate-y-1/2">
               <img src={inventoryImg} alt="Delivery" className="w-14 h-16 object-cover" />
             </div>
-            {/* Text content */}
             <h3 className="text-xl font-semibold">Storing Inventories</h3>
             <p className="text-gray-600">Manage and track your inventory stock levels.</p>  
           </Card>
