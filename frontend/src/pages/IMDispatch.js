@@ -5,19 +5,19 @@ import { useNavigate } from "react-router-dom";
 import ApexCharts from "react-apexcharts";
 import * as XLSX from "xlsx";
 import "jspdf-autotable"
-import { Textarea } from 'flowbite-react';
+//import { Textarea } from 'flowbite-react';
 import Header from '../components/header';
-import notifyImg from "../assets/images/apple.png";
+
+//import notifyImg from "../assets/images/apple.png";
 
 export default function IMDispatch() {
   const [formData, setFormData] = useState({ StockId: "", Date: "", Qty: "", Driver: "", Location: "" });
   const [tDispatch, setTDispatch] = useState([]);
   const [searchDate, setSearchDate] = useState("");
-  /*------*/
-  const [whatsappDetails, setWhatsappDetails] = useState({
-    number: "", message: ""
-  });
-  /*------*/
+  const [recipient, setRecipient] = useState('');
+const [messageBody, setMessageBody] = useState('');
+const [status, setStatus] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,11 +35,7 @@ export default function IMDispatch() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-/*------*/
-  const handleWhatsappChange = (e) => {
-    setWhatsappDetails({ ...whatsappDetails, [e.target.name]: e.target.value });
-  };
-/*-------*/
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -88,26 +84,7 @@ export default function IMDispatch() {
       console.error("Failed to dispatch stock.");
     }
   };
-/*-------*/
-  const handleSendWhatsapp = async (e) => {
-    e.preventDefault();
-    const { number, message } = whatsappDetails;
 
-    try {
-      await axios.post("http://localhost:5000/send-whatsapp", {
-        from: "+94765832812",
-        to: number,
-        message: message
-      });
-
-      alert('Message sent successfully!');
-      window.location.reload();
-    } catch (err) {
-      console.error("Failed to send message", err);
-      alert("Error sending message.");
-    }
-  };
-/*-------*/
   const handleDelete = async (id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this record?");
     if (isConfirmed) {
@@ -151,7 +128,28 @@ export default function IMDispatch() {
     series: [{ name: "Dispatch Stock Amount", data: tDispatch.map((dispatch) => dispatch.Qty) }],
     xaxis: { categories: tDispatch.map((dispatch) => new Date(dispatch.Date).toLocaleDateString()) },
   };
+  //gmail ---------------------------------------
+ 
+  const receivers = [
+    'amath.markperera@gmail.com',
+    'shivantha008@gmail.com',
+    'guwaniemesha@gmail.com'
+  ];
+  
+  const sendEmail = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/email/send-email', {
+        recipient,
+        messageBody
+      });
+      setStatus(response.data.message);
+    } catch (err) {
+      setStatus('Failed to send email');
+    }
+  };
 
+  //-------------------------------------------
+  
   return (
     <div className="min-h-screen flex flex-col">
     <Header />
@@ -199,39 +197,37 @@ export default function IMDispatch() {
         <Card className="w-1/2 p-4 border border-green-500 bg-green-100">
           <h2 className="text-2xl font-bold text-center mb-4">Flow Overview</h2>
           <ApexCharts options={chartOptions} series={chartOptions.series} type="area" height={250} />
-        {/* WhatsApp Messaging Section */}
-        <div className="flex items-center justify-center mt-5">
-        <img src={notifyImg} alt="notification" className="w-10 h-10 object-cover mr-4 transform -translate-y-2" />
-        <h2 className="text-2xl font-bold text-center mb-4">Send WhatsApp Message</h2>
-</div>
-            <form onSubmit={handleSendWhatsapp} className="space-y-4">
-              <div>
-                <Label htmlFor="number" value="Receiver's Number" />
-                <TextInput
-                  id="number"
-                  name="number"
-                  type="text"
-                  value={whatsappDetails.number}
-                  onChange={handleWhatsappChange}
-                  placeholder="Enter receiver's phone number (e.g., +94765832812)"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="message" value="Message" />
-                <Textarea
-                  id="message"
-                  name="message"
-                  value={whatsappDetails.message}
-                  onChange={handleWhatsappChange}
-                  placeholder="Enter message content"
-                  required
-                />
-              </div>
-              <Button type="submit" gradientDuoTone="greenToBlue" className="bg-green-500 text-white w-full mt-4">
-                Send Message
-              </Button>
-            </form>
+        {/* Gmail Sending Section */}
+
+      <h2 className="text-xl font-bold mb-4">Send Email</h2>
+
+      <select
+        value={recipient}
+        onChange={(e) => setRecipient(e.target.value)}
+        className="w-full p-2 mb-4 border rounded"
+      >
+        <option value="">Select Receiver</option>
+        {receivers.map(email => (
+          <option key={email} value={email}>{email}</option>
+        ))}
+      </select>
+
+      <textarea
+        value={messageBody}
+        onChange={(e) => setMessageBody(e.target.value)}
+        placeholder="Enter message here"
+        className="w-full p-2 h-32 mb-4 border rounded"
+      />
+
+      <button
+        onClick={sendEmail}
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Send
+      </button>
+
+      {status && <p className="mt-4 text-sm">{status}</p>}
+
         </Card>
       </div>
     
