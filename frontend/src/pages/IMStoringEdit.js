@@ -69,10 +69,10 @@ export default function IMStoringEdit() {
         )}
 
         <form onSubmit={handleUpdate} className="space-y-4">
-          <div>
+          {/* <div>
             <Label htmlFor="Date" value="Date" />
             <TextInput id="Date" type="date" name="Date" value={formData.Date} onChange={handleChange} />
-          </div>
+          </div> */}
           <div>
             <Label htmlFor="totalAmount" value="Total Amount" />
             <TextInput id="totalAmount" type="number" name="totalAmount" value={formData.totalAmount} onChange={handleChange} />

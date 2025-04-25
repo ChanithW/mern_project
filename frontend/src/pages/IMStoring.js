@@ -32,6 +32,13 @@ export default function IMStoring() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+  const today = new Date().toISOString().split("T")[0];
+  // Date validation
+  if (formData.Date !== today) {
+    alert("You can only select today's date.");
+    return;
+  }
+
     // Validate Total Amount (Prevent Negative Numbers)
   if (formData.totalAmount <= 0 || isNaN(formData.totalAmount)) {
     alert("Total Amount must be a positive number.");
@@ -67,11 +74,12 @@ export default function IMStoring() {
   };
 
   const handleDownloadExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(tStock);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
-    XLSX.writeFile(wb, "Stock_Data.xlsx");
-  };
+      const dataToDownload = searchDate ? filteredTStock : tStock;
+      const ws = XLSX.utils.json_to_sheet(dataToDownload);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Stock Data");
+      XLSX.writeFile(wb, "Stock_Data.xlsx");
+    }; 
   
   const filteredTStock = tStock.filter((stock) => stock.Date.startsWith(searchDate));
 

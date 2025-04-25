@@ -64,11 +64,22 @@ export default function IMStoringEdit() {
     }
 
     // validate id's
-    if (existingStockIds.includes(formData.StockId) && formData.StockId !== tDispatch.StockId) {
+    const stockIdPattern = /^STM\d+$/;
+
+    if (!stockIdPattern.test(formData.StockId)) {
+      alert("Invalid Stock ID format. It should start with 'STM' followed by numbers (e.g., STM123).");
+      return;
+    }
+    
+    if (
+      existingStockIds.includes(formData.StockId) &&
+      formData.StockId !== tDispatch.StockId
+    ) {
       alert("This Stock ID already exists. Please enter a unique Stock ID.");
       return;
     }
-
+    
+    
     // validate qty
     if (formData.Qty <= 0) {
       alert("Quantity must be a positive number.");
@@ -129,10 +140,10 @@ export default function IMStoringEdit() {
               <Label htmlFor="StockId" value="Stock ID" />
               <TextInput id="StockId" type="text" name="StockId" value={formData.StockId} onChange={handleChange} required />
             </div>
-            <div>
+            {/* <div>
               <Label htmlFor="Date" value="Date" />
-              <TextInput id="Date" type="date" name="Date" value={formData.Date} onChange={handleChange} required />
-            </div>
+              <TextInput id="Date" type="date" name="Date" value={formData.Date} onChange={handleChange} readOnl required />
+            </div> */}
             <div>
               <Label htmlFor="Qty" value="Quantity" />
               <TextInput id="Qty" type="number" name="Qty" value={formData.Qty} onChange={handleChange} required />

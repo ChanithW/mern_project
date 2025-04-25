@@ -41,16 +41,38 @@ const [status, setStatus] = useState('');
 
   const today = new Date().toISOString().split("T")[0];
 
-  // StockID validation
+  //stockID
+  // Ensure the value is only the number part first
+  const stockIdInput = formData.StockId.trim(); // user input like "7"
+
+  const isNumeric = /^\d+$/.test(stockIdInput);
+  if (!isNumeric) {
+    alert("Stock ID must be a number, e.g., 1, 2, 9 — not including 'STM'.");
+    return;
+  }
+
+  // Now format it properly
+  formData.StockId = `STM${stockIdInput}`;
+
+  // Final validation for format like STM1, STM7, STM99
+  const isValidFormat = /^STM\d+$/.test(formData.StockId);
+  if (!isValidFormat) {
+    alert("Invalid Stock ID format. It must be in the format 'STM' followed by numbers.");
+    return;
+  }
+
+  // Check for duplicates
   const isDuplicate = tDispatch.some(dispatch => dispatch.StockId === formData.StockId);
   if (isDuplicate) {
     alert("This Stock ID already exists. Please enter a unique Stock ID.");
     return;
   }
 
+  
+
   // Date validation
-  if (formData.Date < today) {
-    alert("You cannot select a past date. Please select today's or a future date.");
+  if (formData.Date !== today) {
+    alert("You can only select today's date.");
     return;
   }
 
@@ -68,9 +90,9 @@ const [status, setStatus] = useState('');
   }
 
   // Validate Location
-  const locationRegex = /^[A-Za-z0-9/]+$/;
+  const locationRegex = /^[A-Za-z0-9/\s]+$/;
   if (!locationRegex.test(formData.Location)) {
-    alert("Location can only contain letters, numbers, and '/'.");
+    alert("Location can only contain letters, numbers, '/', and spaces.");
     return;
   }
 
@@ -103,11 +125,12 @@ const [status, setStatus] = useState('');
   };
 
   const handleDownloadExcel = () => {
-      const ws = XLSX.utils.json_to_sheet(tDispatch);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Delivery Data");
-      XLSX.writeFile(wb, "Dispatch_Data.xlsx");
-    };
+    const dataToDownload = searchDate ? filteredTDispatch : tDispatch;
+    const ws = XLSX.utils.json_to_sheet(dataToDownload);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Delivery Data");
+    XLSX.writeFile(wb, "Dispatch_Data.xlsx");
+  };  
 
   const filteredTDispatch = tDispatch.filter((dispatch) => dispatch.Date.startsWith(searchDate));
 
@@ -133,7 +156,8 @@ const [status, setStatus] = useState('');
   const receivers = [
     'amath.markperera@gmail.com',
     'shivantha008@gmail.com',
-    'guwaniemesha@gmail.com'
+    'guwaniemesha@gmail.com',
+    'nehanperera484@gmail.com'
   ];
   
   const sendEmail = async () => {
