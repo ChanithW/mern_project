@@ -9,9 +9,12 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.8.3",
     "flowbite-react": "^0.10.2",
+    "leaflet": "^1.9.4",
     "react": "^19.0.0",
     "react-router-dom": "^7.3.0",
     "react-scripts": "5.0.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
