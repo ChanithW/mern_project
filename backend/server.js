@@ -6,6 +6,8 @@ require('dotenv').config();
 const EMregisterroutes = require("./routes/EMregisterroutes");
 const teaPluckingRoutes = require("./routes/teaPluckingRoutes");
 const attendanceRoutes = require("./routes/AttendenceRouts");
+const routeremail = require("./routes/emailRoutes");
+
 
 const cors = require("cors");
 const userController = require("./controller/userController");
@@ -31,6 +33,10 @@ app.delete("/api/users/:id", userController.deleteUser);
 // Inventory Management
 app.use("/tstock", router);
 app.use("/tdispatch", routerdisptcher);
+//IM sms - Amath
+app.use(express.json());
+app.use("/api/email", routeremail);
+//app.use(smsRoutes);
 
 // Field Management Schedules
 app.post("/api/createschedule", fdmController.createSchedule);

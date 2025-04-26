@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Label, TextInput, Card } from "flowbite-react";
 import bgImage from '../assets/images/shrilanka-tea-estates.jpg';
+import Header from '../components/header';
 
 function IMLogin() {
 
@@ -14,10 +15,10 @@ function IMLogin() {
     e.preventDefault();
     console.log("Admin Login Attempt:", { username, password });
     // Redirect to admin dashboard (to be implemented)
-    navigate("/IMStoring");
+    navigate("/IMDashboard");
 
     if (username === "IMadmin" && password === "IM@123") {
-        navigate("/IMStoring"); // Redirect to the admin dashboard
+        navigate("/IMDashboard"); // Redirect to the admin dashboard
     } else {
         alert("Invalid username or password");
         navigate("/IMLogin"); // Redirect to the admin login page
@@ -27,6 +28,8 @@ function IMLogin() {
   
 
   return (
+    <div className="min-h-screen flex flex-col">
+    <Header />
     <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
       <Card className="w-96 p-6">
         <h2 className="text-2xl font-bold text-center mb-4">Admin Login</h2>
@@ -58,6 +61,7 @@ function IMLogin() {
           </Button>
         </form>
       </Card>
+    </div>
     </div>
   )
 }
