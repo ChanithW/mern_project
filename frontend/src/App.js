@@ -2,8 +2,6 @@ import "./App.css";
 import { StrictMode } from "react";
 import Home from "./pages/home.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import AdminLogin from "./pages/AdminLogin.js"; //admin
-import AdminDashboard from "./pages/AdminDashboard.js"; //admin
 import IMStoring from "./pages/IMStoring.js"; //Amath
 import IMLogin from "./pages/IMLogin.js"; //Amath
 
