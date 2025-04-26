@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Modal } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
-import bgImage from '../assets/images/shrilanka-tea-estates.jpg';
+//import bgImage from '../assets/images/shrilanka-tea-estates.jpg';
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);

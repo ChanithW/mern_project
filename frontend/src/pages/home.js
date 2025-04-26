@@ -24,7 +24,7 @@ function Home() {
         <div className="space-y-4">
           <Button className="bg-green-500 text-white w-full py-2" href="/fertilization">Fertilization & Disease Management</Button>
           <Button className="bg-green-500 text-white w-full py-2" href="/inventory">Inventory Management</Button>
-          <Button className="bg-green-500 text-white w-full py-2" href="/employees">Employee Management</Button>
+          <Button className="bg-green-500 text-white w-full py-2" onClick={() => navigate("/EMlogin")} >Employee Management</Button>
           <Button className="bg-green-500 text-white w-full py-2" href="/orders">Order and Delivery Management</Button>
           <Button className="bg-green-500 text-white w-full py-2" href="/finance">Finance Management</Button>
         </div>
