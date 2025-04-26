@@ -1,5 +1,4 @@
 const IMStoreModel = require("../model/IMStoreModel");
-//const IMstock = require("../model/IMStoreModel");
 //View on postman
 const getStore = async (req, res, next) =>{
     let TStock;
