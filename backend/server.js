@@ -3,6 +3,11 @@ const connectDB = require('./database/db'); // Import DB connection
 const router = require("./routes/IMStoreRouter");
 const routerdisptcher = require("./routes/IMDispatchRouter");
 require('dotenv').config(); // Load environment variables
+const connectDB = require('./database/db'); // Import the DB connection
+const EMregisterroutes = require("./routes/EMregisterroutes"); //Tuda emp
+const teaPluckingRoutes = require("./routes/teaPluckingRoutes");//tuda tea rec
+
+
 
 
 const cors = require("cors");
@@ -14,7 +19,7 @@ const financeController = require("./controller/FMController");
 const app = express();
 app.use(express.json());
 app.use(cors());
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 
 
 // Connect to MongoDB (only once)
@@ -60,4 +65,18 @@ app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
 
 app.listen(PORT, () => {
   console.log(`Server running on port. ${PORT}`);
+});
+//EM - tuda
+app.use(express.json());
+app.use("/EMployee",EMregisterroutes);
+//tea-plucking
+app.use(express.json());
+app.use("/tea-plucking", teaPluckingRoutes); //Tea plucking roouter
+
+
+
+const attendanceRoutes = require("./routes/AttendenceRouts");
+app.use("/attendance", attendanceRoutes);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

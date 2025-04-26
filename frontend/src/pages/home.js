@@ -47,7 +47,7 @@ function Home() {
               </Button>
               <Button
                 className="bg-green-500 text-white w-full py-2"
-                href="/employees"
+                onClick={() => navigate("/EMlogin")}
               >
                 Employee Management
               </Button>
