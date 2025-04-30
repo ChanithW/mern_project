@@ -14,13 +14,15 @@
     "axios": "^1.8.3",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.2",
     "mailersend": "^2.3.0",
-    "mongoose": "^8.12.1",
-    "nodemailer": "^6.10.0"
+    "mongoose": "^8.14.0",
+    "multer": "^1.4.5-lts.2",
+    "nodemailer": "^6.10.0",
+    "pdfkit": "^0.17.0"
   }
 }

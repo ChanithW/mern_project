@@ -14,7 +14,7 @@ function FinanceLogin() {
     e.preventDefault();
     console.log("Finance Login Attempt:", { username, password });
 
-    if (username === "chan" && password === "chan123") {
+    if (username === "Chanith" && password === "chanithuw2019") {
       navigate("/finance-dashboard"); // Redirect to the finance dashboard
     } else {
       alert("Invalid username or password");

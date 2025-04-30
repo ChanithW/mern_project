@@ -23,21 +23,22 @@ const FMRead = () => {
 
   const handleDownload = () => {
     axios
-      .get("http://localhost:5000/api/finance/download", {
+      .get(`http://localhost:5000/api/finance/download?search=${encodeURIComponent(search)}`, {
         responseType: "blob",
       })
       .then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const url = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "Finance_Report.csv");
+        link.setAttribute("download", "Finance_Report.pdf");
         document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
       })
       .catch((err) => console.error("Error downloading file:", err));
   };
 
-  //fetching from back
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/finance")
@@ -45,10 +46,8 @@ const FMRead = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  // Filter records based on search query
   const filteredRecords = records.filter((record) => {
     const searchLower = search.toLowerCase();
-
     const nameMatch = record.name.toLowerCase().includes(searchLower);
     const dateMatch = record.date.toLowerCase().includes(searchLower);
     const valueMatch = record.value.toString().includes(search);
@@ -56,17 +55,11 @@ const FMRead = () => {
     return nameMatch || dateMatch || valueMatch;
   });
 
-  // Separate incomes and expenses
   const incomes = filteredRecords.filter((record) => record.type === "income");
   const expenses = filteredRecords.filter(
     (record) => record.type === "expense"
   );
 
-  // Calculate totals
-  /* const totalIncome = incomes.reduce((sum, record) => sum + record.value, 0);
-  const totalExpense = expenses.reduce((sum, record) => sum + record.value, 0); */
-
-  // Calculate total income, expenses, and balance
   const totalIncomes = transactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + t.value, 0);
@@ -77,7 +70,6 @@ const FMRead = () => {
 
   const balance = totalIncomes - totalExpenses;
 
-  //chart from apexChart.js
   const chartOptions = {
     chart: {
       type: "bar",
@@ -86,7 +78,6 @@ const FMRead = () => {
       categories: ["Incomes", "Expenses"],
     },
     colors: ["#4CAF50", "#F44336"],
-    //toensure color is applied properly
     plotOptions: {
       bar: {
         distributed: true,
@@ -113,7 +104,7 @@ const FMRead = () => {
         <div className="max-w-8xl mx-auto bg-white p-6 shadow-lg rounded-lg border-2 border-green-500">
           <div>
             <h2 className="mt-3 text-3xl font-bold">Finance Dashboard</h2>
-            <br></br>
+            <br />
             <div className="mb-4 flex space-x-2">
               <input
                 type="text"
@@ -141,13 +132,14 @@ const FMRead = () => {
                   <th className="border border-black p-2">Transaction Name</th>
                   <th className="border border-black p-2">Type</th>
                   <th className="border border-black p-2">Value (LKR)</th>
+                  <th className="border border-black p-2">Image</th> {/* Added Image column */}
                   <th className="border border-black p-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {/* Incomes Section */}
                 <tr className="bg-gray-200">
-                  <td className="border border-black p-2 font-bold" colSpan="4">
+                  <td className="border border-black p-2 font-bold" colSpan="5"> {/* Updated colSpan */}
                     Incomes
                   </td>
                 </tr>
@@ -165,6 +157,17 @@ const FMRead = () => {
                       {record.value.toFixed(2)}
                     </td>
                     <td className="border border-black p-2">
+                      {record.image ? (
+                        <img
+                          src={`http://localhost:5000${record.image}`} // Full URL to the image
+                          alt="Transaction"
+                          className="w-16 h-16 object-cover mx-auto" // Adjusted size and centered
+                        />
+                      ) : (
+                        <span>-</span> // Placeholder for records without images
+                      )}
+                    </td>
+                    <td className="border border-black p-2">
                       <div className="flex justify-center space-x-2">
                         <Button
                           className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
@@ -187,25 +190,9 @@ const FMRead = () => {
                   </tr>
                 ))}
 
-
-                {/* total incomes row*/}
-                {/* <tr className="bg-yellow-200 font-bold">
-                  <td
-                    className="border border-black p-2 text-right"
-                    colSpan="3"
-                  >
-                    Total Incomes:
-                  </td>
-                  <td className="border border-black p-2">
-                    {totalIncome.toFixed(2)}
-                  </td>
-                </tr> */}
-
-
-
                 {/* Expenses Section */}
                 <tr className="bg-gray-200">
-                  <td className="border border-black p-2 font-bold" colSpan="4">
+                  <td className="border border-black p-2 font-bold" colSpan="5"> {/* Updated colSpan */}
                     Expenses
                   </td>
                 </tr>
@@ -223,6 +210,17 @@ const FMRead = () => {
                       {record.value.toFixed(2)}
                     </td>
                     <td className="border border-black p-2">
+                      {record.image ? (
+                        <img
+                          src={`http://localhost:5000${record.image}`} // Full URL to the image
+                          alt="Transaction"
+                          className="w-16 h-16 object-cover mx-auto" // Adjusted size and centered
+                        />
+                      ) : (
+                        <span>-</span> // Placeholder for records without images
+                      )}
+                    </td>
+                    <td className="border border-black p-2">
                       <div className="flex justify-center space-x-2">
                         <Button
                           className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
@@ -244,38 +242,21 @@ const FMRead = () => {
                     </td>
                   </tr>
                 ))}
-
-
-                {/* Total expenses row*/}
-                {/* <tr className="bg-yellow-200 font-bold">
-                  <td
-                    className="border border-black p-2 text-right"
-                    colSpan="3"
-                  >
-                    Total Expenses:
-                  </td>
-                  <td className="border border-black p-2">
-                    {totalExpense.toFixed(2)}
-                  </td>
-                </tr> */}
-
-
               </tbody>
             </table>
 
-            <br></br>
-            {/* new dev to add chart and summary calculation */}
+            <br />
             <div className="flex gap-2">
               <div className="w-1/3 h-1/4 mt-6 p-4 bg-white border border-black rounded-lg">
                 <h3 className="text-3xl font-bold">Financial Summary</h3>
-                <br></br>
+                <br />
                 <p className="text-green-600 font-bold text-xl">
                   Total Income: LKR{totalIncomes.toFixed(2)}
                 </p>
                 <p className="text-red-600 font-bold text-xl">
                   Total Expenses: LKR{totalExpenses.toFixed(2)}
                 </p>
-                <br></br>
+                <br />
                 <p
                   className={`text-2xl font-bold ${
                     balance >= 0 ? "text-green-700" : "text-red-700"
@@ -285,19 +266,16 @@ const FMRead = () => {
                 </p>
               </div>
 
-              {/* finance chart from apexchart.js*/}
               <div className="w-2/3 mt-6 p-4 bg-white border border-black rounded-lg">
-              <h3 className="text-2xl font-semibold mb-2">Financial Summary Chart</h3>
-              <Chart
-                options={chartOptions}
-                series={chartSeries}
-                type="bar"
-                height={350}
-              />
+                <h3 className="text-2xl font-semibold mb-2">Financial Summary Chart</h3>
+                <Chart
+                  options={chartOptions}
+                  series={chartSeries}
+                  type="bar"
+                  height={350}
+                />
+              </div>
             </div>
-            </div>
-            
-            
           </div>
         </div>
       </div>

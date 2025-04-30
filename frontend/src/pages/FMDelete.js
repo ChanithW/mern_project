@@ -46,6 +46,20 @@ const FMDelete = () => {
           <p>
             <strong>Value:</strong> {record.value}
           </p>
+          <p>
+            <strong>Image:</strong>
+            {record.image ? (
+              <div className="mt-2">
+                <img
+                  src={`http://localhost:5000${record.image}`}
+                  alt="Transaction"
+                  className="w-32 h-32 object-cover mx-auto"
+                />
+              </div>
+            ) : (
+              <span className="block mt-2"> No image available</span>
+            )}
+          </p>
 
           <div className="mt-4 flex justify-between">
             <button
@@ -62,9 +76,7 @@ const FMDelete = () => {
             </button>
           </div>
         </div>
-      ) : (
-        <p>Loading record details...</p>
-      )}
+      ) : (<p>Loading record details...</p>)}
     </div>
   );
 };
