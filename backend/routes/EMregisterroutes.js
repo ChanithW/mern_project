@@ -8,9 +8,9 @@ const EMregisterCTRL = require("../controller/EMregisterCTRL");
 
 router.get("/",EMregisterCTRL.getEM);
 router.post("/",EMregisterCTRL.addEM);
-router.get("/:id",EMregisterCTRL.getById);
+router.get("/:employeeId",EMregisterCTRL.getById);
 router.put("/:id",EMregisterCTRL.updateEM);
-router.delete("/:id",EMregisterCTRL.deleteEM);
+router.delete("/:employeeId",EMregisterCTRL.deleteEM);
 
 
 //export

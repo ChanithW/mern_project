@@ -40,6 +40,7 @@ import QrScanner from "./pages/QrCodeScanner.js";
 import AttendanceList from "./pages/AttendanceList.js";
 import EmployeePerformance from "./pages/EmployeePerformance.js";
 import EmployeeDashboard from "./pages/EmployeeDashboard.js";
+import EmAttendance from "./pages/EmAttendance.js"
 
 
 
@@ -68,6 +69,7 @@ function App() {
       <Route path="/about-us" element={<Aboutus/>} />
       <Route path="/faq" element={<FAQ/>} />
       <Route path="/fdm-femail" element={<FDMfemail/>} />
+      <Route path="/EmAttendance" element={<EmAttendance/>}/>
 
       <Route path="/add-user" element={<AddUsers />} />
       <Route path="/edit-user/:id" element={<EditUser />} />
@@ -88,6 +90,7 @@ function App() {
      < Route path="/AttendanceList" element={<AttendanceList/>}/>
      <Route path="/EmployeePerformance" element={<EmployeePerformance/>}/>
     <Route path="/EmployeeDashboard" element={<EmployeeDashboard/>}/>
+    
     </Routes>
   </Router>
 </StrictMode>

@@ -20,4 +20,9 @@ router.put("/:id", attendanceController.updateAttendance);
 // Delete attendance
 router.delete("/:id", attendanceController.deleteAttendance);
 
+router.get("monthlyAttendace/:id", attendanceController.calculateMonthlyAttendance);
+
+router.get("/summary/:employeeId", attendanceController.getAttendanceSummary);
+
+
 module.exports = router;

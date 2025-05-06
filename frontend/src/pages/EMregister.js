@@ -38,7 +38,7 @@ function EMregister() {
       alert("Name can only contain letters");
       return;
     }
-    //valodate age
+    //validate age
     if (!/^(?:1[89]|[2-5][0-9]|60)$/.test(formData.age)) {
       alert("Age must be between 18 and 60 and cannot be negative");
       return;
@@ -54,17 +54,28 @@ function EMregister() {
       alert("Phone number must start with 0 and be exactly 10 digits");
       return;
     }
-    // genarate emp id before submit
+    // generate emp id before submit
     const employeeId = generateEmployeeId();
     const dataWithId = { ...formData, employeeId };
 
     try {
       const response = await axios.post("http://localhost:8000/EMployee", dataWithId);
-      setSubmittedData(response.data);
+      
+      // Store the complete response data and ensure we have the employee ID
+      const savedEmployee = response.data;
+      
+      // Create a complete employee object with all necessary data
+      const completeEmployeeData = {
+        ...savedEmployee,
+        // Fallback to local values if not returned by server
+        employeeId: savedEmployee.employeeId || employeeId,
+        name: savedEmployee.name || formData.name,
+        phoneNumber: savedEmployee.phoneNumber || formData.phoneNumber
+      };
+      
+      setSubmittedData(completeEmployeeData);
       setShowQRCode(true);
       alert("Employee added successfully! QR code generated.");
-
-
     } catch (error) {
       console.error("Error adding employee:", error);
       alert("Failed to add employee.");
@@ -79,7 +90,7 @@ function EMregister() {
         const image = canvas.toDataURL("image/png");
         const link = document.createElement('a');
         link.href = image;
-        link.download = `qrcode-${submittedData?.employeeId || formData.name}.png`;
+        link.download = `qrcode-${submittedData?.employeeId || 'employee'}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -104,6 +115,9 @@ function EMregister() {
     setShowQRCode(false);
     setSubmittedData(null);
   };
+
+  // For debugging only
+  console.log("Current submittedData:", submittedData);
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 p-10 bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
@@ -165,16 +179,16 @@ function EMregister() {
               <div className="border border-gray-300 p-4 rounded-lg">
                 <QRCodeCanvas
                   value={JSON.stringify({
-                    employeeId: submittedData?.employeeId || formData.employeeId,
-                    name: formData.name,
-                    phoneNumber: formData.phoneNumber
+                    employeeId: submittedData?.employeeId || "",
+                    name: submittedData?.name || "",
+                    phoneNumber: submittedData?.phoneNumber || ""
                   })}
                   size={200}
                   level={"H"}
                   includeMargin={true}
                 />
               </div>
-              <p className="text-center font-medium">Employee ID: {submittedData?.employeeId || formData.employeeId}</p>
+              <p className="text-center font-medium">Employee ID: {submittedData?.employeeId || ""}</p>
               <p className="text-center text-sm text-gray-600">Scan this QR code for attendance</p>
 
               <div className="flex space-x-4 mt-4">
