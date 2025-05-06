@@ -105,24 +105,32 @@ const FMRead = () => {
           <div>
             <h2 className="mt-3 text-3xl font-bold">Finance Dashboard</h2>
             <br />
-            <div className="mb-4 flex space-x-2">
-              <input
-                type="text"
-                placeholder="Search records..."
-                className="p-2 border border-green-400 rounded-lg"
-                onChange={(e) => setSearch(e.target.value)}
-              />
+            <div className="mb-4 flex justify-between items-center">
+              <div className="flex space-x-2">
+                <input
+                  type="text"
+                  placeholder="Search records..."
+                  className="p-2 border border-green-400 rounded-lg"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <Button
+                  className="bg-gray-600 text-white px-4 py-2"
+                  onClick={handleDownload}
+                >
+                  📥 Download Report
+                </Button>
+                <Button
+                  className="bg-green-600 text-white px-4 py-2 hover:bg-green-700"
+                  onClick={() => navigate("/add-finance")}
+                >
+                  ➕ Add New Record
+                </Button>
+              </div>
               <Button
-                className="bg-gray-600 text-white px-4 py-2"
-                onClick={handleDownload}
+                className="bg-blue-600 text-white px-4 py-2 hover:bg-blue-700"
+                onClick={() => navigate("/payroll-management")}
               >
-                📥 Download Report
-              </Button>
-              <Button
-                className="bg-green-600 text-white px-4 py-2 hover:bg-green-700"
-                onClick={() => navigate("/add-finance")}
-              >
-                ➕ Add New Record
+                💼 Payroll Management
               </Button>
             </div>
             <table className="w-full border-collapse border border-black">
@@ -132,14 +140,13 @@ const FMRead = () => {
                   <th className="border border-black p-2">Transaction Name</th>
                   <th className="border border-black p-2">Type</th>
                   <th className="border border-black p-2">Value (LKR)</th>
-                  <th className="border border-black p-2">Image</th> {/* Added Image column */}
+                  <th className="border border-black p-2">Image</th>
                   <th className="border border-black p-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {/* Incomes Section */}
                 <tr className="bg-gray-200">
-                  <td className="border border-black p-2 font-bold" colSpan="5"> {/* Updated colSpan */}
+                  <td className="border border-black p-2 font-bold" colSpan="5">
                     Incomes
                   </td>
                 </tr>
@@ -159,12 +166,12 @@ const FMRead = () => {
                     <td className="border border-black p-2">
                       {record.image ? (
                         <img
-                          src={`http://localhost:5000${record.image}`} // Full URL to the image
+                          src={`http://localhost:5000${record.image}`}
                           alt="Transaction"
-                          className="w-16 h-16 object-cover mx-auto" // Adjusted size and centered
+                          className="w-16 h-16 object-cover mx-auto"
                         />
                       ) : (
-                        <span>-</span> // Placeholder for records without images
+                        <span>-</span>
                       )}
                     </td>
                     <td className="border border-black p-2">
@@ -190,9 +197,8 @@ const FMRead = () => {
                   </tr>
                 ))}
 
-                {/* Expenses Section */}
                 <tr className="bg-gray-200">
-                  <td className="border border-black p-2 font-bold" colSpan="5"> {/* Updated colSpan */}
+                  <td className="border border-black p-2 font-bold" colSpan="5">
                     Expenses
                   </td>
                 </tr>
@@ -212,12 +218,12 @@ const FMRead = () => {
                     <td className="border border-black p-2">
                       {record.image ? (
                         <img
-                          src={`http://localhost:5000${record.image}`} // Full URL to the image
+                          src={`http://localhost:5000${record.image}`}
                           alt="Transaction"
-                          className="w-16 h-16 object-cover mx-auto" // Adjusted size and centered
+                          className="w-16 h-16 object-cover mx-auto"
                         />
                       ) : (
-                        <span>-</span> // Placeholder for records without images
+                        <span>-</span>
                       )}
                     </td>
                     <td className="border border-black p-2">

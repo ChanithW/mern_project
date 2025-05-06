@@ -75,7 +75,7 @@ const AdminDashboard = () => {
           <Button
             className="w-full bg-red-600 text-white w-full py-2 mt-4 hover:bg-red-700"
             color="failure"
-            onClick={() => navigate("/admin-login")}
+            onClick={() => navigate("/")}
           >
             🚪 Log Out
           </Button>

@@ -25,6 +25,7 @@ import FMRead from "./pages/FMRead.js";
 import FMCreate from "./pages/FMCreate.js";
 import FMUpdate from "./pages/FMUpdate.js";
 import FMDelete from "./pages/FMDelete.js";
+//import PayrollManagement from "./components/PayrollManagement";
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
       <Route path="/add-finance" element={<FMCreate />} />
       <Route path="/edit-finance/:id" element={<FMUpdate />} />
       <Route path="/delete-finance/:id" element={<FMDelete />} />
+      {/* <Route path="/payroll-management" element={<PayrollManagement />} /> */}
     </Routes>
   </Router>
 </StrictMode>
