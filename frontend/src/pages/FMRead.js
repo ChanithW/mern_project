@@ -10,7 +10,7 @@ const FMRead = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/finance")
+      .get("http://localhost:8000/api/finance")
       .then((res) => {
         console.log("Response data:", res.data);
         setRecords(res.data);
@@ -20,7 +20,7 @@ const FMRead = () => {
 
   const handleDownload = () => {
     axios
-      .get("http://localhost:5000/api/finance/download", {
+      .get("http://localhost:8000/api/finance/download", {
         responseType: "blob",
       })
       .then((res) => {

@@ -10,6 +10,7 @@ function FDMdRecordsEdit() {
     foundDate: "",
     diseaseName: "",
     spreadStatus: "",
+    spreadArea: "", // New field for spread area
     treatments: "",
     notes: "",
     status: "",
@@ -84,6 +85,7 @@ function FDMdRecordsEdit() {
                 onChange={handleChange}
                 required
                 className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+                max={new Date().toISOString().split("T")[0]} // Restricts future dates
               />
             </div>
 
@@ -96,6 +98,8 @@ function FDMdRecordsEdit() {
                 onChange={handleChange}
                 required
                 className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+                pattern="^[A-Za-z\s]+$" // Allows only letters and spaces
+                title="Only letters are allowed" // Tooltip message for invalid input
               />
             </div>
 
@@ -116,6 +120,19 @@ function FDMdRecordsEdit() {
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700">Spread Area</label>
+              <input
+                type="text"
+                name="spreadArea"
+                value={formData.spreadArea}
+                onChange={handleChange}
+                required
+                className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+               
+              />
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700">Treatments</label>
               <input
                 type="text"
@@ -124,6 +141,9 @@ function FDMdRecordsEdit() {
                 onChange={handleChange}
                 required
                 className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+                pattern="^[A-Za-z0-9]{7}$" // Allows exactly 7 letters or numbers (no spaces)
+                maxLength="7" // Prevents users from entering more than 7 characters
+                title="Only letters and positive numbers are allowed (exactly 7 characters, no spaces)" // Tooltip for invalid input
               />
             </div>
 
@@ -132,9 +152,16 @@ function FDMdRecordsEdit() {
               <textarea
                 name="notes"
                 value={formData.notes}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Disallow minus sign (-) but allow all other characters
+                  if (!value.includes("-")) {
+                    handleChange(e); // Update state only if there is no minus sign
+                  }
+                }}
                 rows="3"
                 className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="You can enter letters, numbers, and symbols, but no negative numbers"
               ></textarea>
             </div>
 
@@ -168,3 +195,5 @@ function FDMdRecordsEdit() {
 }
 
 export default FDMdRecordsEdit;
+
+

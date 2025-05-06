@@ -20,7 +20,7 @@ const FMCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/finance", formData);
+      await axios.post("http://localhost:8000/api/finance", formData);
       alert("Record added successfully!");
       navigate("/finance-dashboard");
     } catch (error) {
