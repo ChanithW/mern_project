@@ -1,5 +1,4 @@
 const IMDispatchModel = require("../model/IMDispatchModel");
-//const IMstock = require("../model/IMStoreModel");
 //View on postman
 const getDispatch = async (req, res, next) =>{
     let TDispatch;
@@ -62,7 +61,7 @@ const updateDispatch = async (req, res, next) => {
     let tDispatch;
 
     try{
-        tDispatch = await IMDispatchModel.findByIdAndUpdate(id, {Date: Date, totalAmount: totalAmount});
+        tDispatch = await IMDispatchModel.findByIdAndUpdate(id, {StockId: StockId, Date: Date, Qty: Qty, Driver: Driver, Location: Location});
         tDispatch = await tDispatch.save();
     }catch(err) {
         console.log(err);
