@@ -31,7 +31,7 @@ function Home() {
           </div>
 
           {/* Right Section */}
-          <Card className="w-1/2 bg-gray-100 border-green-300 p-6 rounded-lg shadow-md">
+          <Card className="w-1/2 bg-gray-100 border-green-500 p-6 rounded-lg shadow-md">
             <div className="space-y-4">
               <Button
                 className="bg-green-500 text-white w-full py-2"

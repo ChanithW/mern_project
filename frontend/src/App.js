@@ -2,13 +2,18 @@ import "./App.css";
 import { StrictMode } from "react";
 import Home from "./pages/home.js";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import IMStoring from "./pages/IMStoring.js"; //Amath
-import IMLogin from "./pages/IMLogin.js"; //Amath
-import IMDispatch from "./pages/IMDispatch.js"; //Amath
-import IMDashboard from "./pages/IMDashboard.js"; //Amath
-import IMStoringEdit from "./pages/IMStoringEdit.js"; //Amath
-import IMDispatchEdit from "./pages/IMDispatchEdit.js"; //Amath
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
+// Inventory Management Routes
+import IMStoring from "./pages/IMStoring.js";
+import IMLogin from "./pages/IMLogin.js";
+import IMDispatch from "./pages/IMDispatch.js";
+import IMDashboard from "./pages/IMDashboard.js";
+import IMStoringEdit from "./pages/IMStoringEdit.js";
+import IMDispatchEdit from "./pages/IMDispatchEdit.js";
+
+// Fertilization & Disease Management Routes
 import FDMLogin from "./pages/FDMLogin.js";
 import FDMdashBoard from "./pages/FDMdashBoard.js";
 import FDMscheduleRead from "./pages/FDMscheduleRead.js";
@@ -26,13 +31,20 @@ import FDMfemail from "./pages/FDMfemail"
 
 import AddUsers from "./pages/AddUsers";
 import EditUser from "./pages/EditUser";
+
+// Finance Management Routes
 import FinanceLogin from "./pages/FMLogin.js";
 import FMRead from "./pages/FMRead.js";
 import FMCreate from "./pages/FMCreate.js";
 import FMUpdate from "./pages/FMUpdate.js";
 import FMDelete from "./pages/FMDelete.js";
+
+
+// Admin Routes
 import AdminLogin from "./pages/AdminLogin.js";
 import AdminDashboard from "./pages/AdminDashboard.js";
+
+// Employee Management Routes
 import EMlogin from "./pages/EMlogin.js";
 import EMregister from "./pages/EMregister.js";
 import EMview from "./pages/EMview.js";
@@ -46,7 +58,7 @@ import EmployeePerformance from "./pages/EmployeePerformance.js";
 import EmployeeDashboard from "./pages/EmployeeDashboard.js";
 import EmAttendance from "./pages/EmAttendance.js"
 
-
+// Order & Delivery Management Routes
 import ODMdriverlogin from "./pages/ODMdriverlogin.js";
 import ODMhome from "./pages/ODMhome.js";
 import ODMview from "./pages/ODMview.js";
@@ -56,89 +68,355 @@ import ODMDashboard from "./pages/ODMDashboard.js";
 import ODMtracker from "./pages/RealTimeTracking.js";
 import VehicleTracker from "./pages/VehicleTracker.js";
 
+// New Auth Pages
+import DeliveryLogin from "./pages/ODMdriverlogin.js";
+import EmployeeLogin from "./pages/EMlogin.js";
+import FertilizationLogin from "./pages/FDMLogin.js";
+import InventoryLogin from "./pages/IMLogin.js";
+
 function App() {
   return (
-<StrictMode>
-  <Router>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/admin-login" element={<AdminLogin />} />
-      <Route path="/admin-dashboard" element={<AdminDashboard />} />
-      <Route path="/IMLogin" element={<IMLogin />} /*Amath*/ />
-      <Route path="/IMStoring" element={<IMStoring/>}/*Amath*/ />
-      <Route path="/IMDispatch" element={<IMDispatch/>} /*Amath*/ />
-      <Route path="/IMDashboard" element={<IMDashboard/>} /*Amath*/ />
-      <Route path="/IMStoringEdit/:id" element={<IMStoringEdit/>} /*Amath*/ />
-      <Route path="/IMDispatchEdit/:id" element={<IMDispatchEdit/>} /*Amath*/ />
+    <Router>
+      <AuthProvider>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<Aboutus />} />
+          <Route path="/faq" element={<FAQ />} />
 
-      <Route path="/fdm-login" element={<FDMLogin />} />
-      <Route path="/fdm-dashboard" element={<FDMdashBoard />} />
-      <Route path="/fdm-scheduleRead" element={<FDMscheduleRead />} />
-      <Route path="/fdm-drecordsRead" element={<FDMdRecordsRead />} />
-      <Route path="/fdm-fScheduleCreate" element={<FDMfScheduleCreate />} />
-      <Route path="/fdm-fScheduleEdit/:id" element={<FDMfScheduleEdit />} />
-      <Route path="/fdm-dRecordsCreate" element={<FDMdRecordsCreate />} />
-      <Route path="/fdm-dRecordsEdit/:id" element={<FDMdRecordsEdit/>} />
-      <Route path="/fdm-fertilizerGenerator" element={<FDMfertilizerGenerator/>} />
-      <Route path="/fdm-dDiseaseRemedies" element={<FDMdDiseaseRemedies/>} />
-
-      
-      <Route path="/fdm-femail" element={<FDMfemail/>} />
-
-      <Route path="/about-us" element={<Aboutus/>} />
-      <Route path="/faq" element={<FAQ/>} />
-    
-      <Route path="/fdm-femail" element={<FDMfemail/>} />
-      <Route path="/EmAttendance" element={<EmAttendance/>}/>
-
-      <Route path="/add-user" element={<AddUsers />} />
-      <Route path="/edit-user/:id" element={<EditUser />} />
-
-      <Route path="/finance-login" element={<FinanceLogin />} />
-      <Route path="/finance-dashboard" element={<FMRead />} />
-      <Route path="/add-finance" element={<FMCreate />} />
-      <Route path="/edit-finance/:id" element={<FMUpdate />} />
-      <Route path="/delete-finance/:id" element={<FMDelete />} />
-      <Route path="/EMlogin" element={<EMlogin />} />
-     < Route path="/EMregister" element={<EMregister />} />
-     < Route path="/EMview" element={<EMview />} />
-     < Route path="/EMedit/:id" element={<EMedit/>}/>
-     < Route path="/TeaPluckingForm" element={<TeaPluckingForm/>}/>
-     < Route path="/TeaPluckingTable" element={<TeaPluckingTable/>}/>
-     < Route path="/TeaPluckingEdit/:id" element={<TeaPluckingEdit/>}/>
-     < Route path="/QrScanner" element={<QrScanner/>}/>
-     < Route path="/AttendanceList" element={<AttendanceList/>}/>
-     <Route path="/EmployeePerformance" element={<EmployeePerformance/>}/>
-    <Route path="/EmployeeDashboard" element={<EmployeeDashboard/>}/>
-      <Route path="/ODMdriverlogin" element={<ODMdriverlogin />} />
-      <Route path="/ODMhome" element={<ODMhome />} />
-      <Route path="/ODMview" element={<ODMview />} />
-      <Route path="/ODMedit/:id" element={<ODMedit />} />
-      <Route path="/ODinsert" element={<ODinsert />} />
-      <Route path="/ODMDashboard" element={<ODMDashboard />} />
+          {/* Authentication Routes */}
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/finance-login" element={<FinanceLogin />} />
+          <Route path="/employee-login" element={<EmployeeLogin />} />
+          <Route path="/fertilization-login" element={<FertilizationLogin />} />
+          <Route path="/inventory-login" element={<InventoryLogin />} />
+          <Route path="/delivery-login" element={<DeliveryLogin />} />
 
 
+          {/* Legacy Login Routes (to be deprecated) */}
+          <Route path="/IMLogin" element={<IMLogin />} />
+          <Route path="/fdm-login" element={<FDMLogin />} />
+          <Route path="/EMlogin" element={<EMlogin />} />
+          <Route path="/ODMdriverlogin" element={<ODMdriverlogin />} />
 
+          {/* Admin Routes */}
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Owner"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />  
+          <Route
+            path="/add-user"
+            element={
+              <ProtectedRoute allowedRoles={["Owner"]}>
+                <AddUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-user/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Owner"]}>
+                <EditUser />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Finance Management Routes */}
+          <Route
+            path="/finance-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Finance officer", "Owner"]}>
+                <FMRead />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-finance"
+            element={
+              <ProtectedRoute allowedRoles={["Finance officer", "Owner"]}>
+                <FMCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/edit-finance/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Finance officer", "Owner"]}>
+                <FMUpdate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/delete-finance/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Finance officer", "Owner"]}>
+                <FMDelete />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Employee Management Routes */}
+          <Route
+            path="/employee-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <EmployeeDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/EMregister"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <EMregister />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/EMview"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <EMview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/EMedit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <EMedit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/TeaPluckingForm"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <TeaPluckingForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/TeaPluckingTable"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <TeaPluckingTable />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/TeaPluckingEdit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <TeaPluckingEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/QrScanner"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <QrScanner />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/AttendanceList"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <AttendanceList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/EmployeePerformance"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <EmployeePerformance />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Fertilization & Disease Management Routes */}
+          <Route
+            path="/fertilization-dashboard"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMdashBoard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-scheduleRead"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMscheduleRead />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-drecordsRead"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMdRecordsRead />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-fScheduleCreate"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMfScheduleCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-fScheduleEdit/:id"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMfScheduleEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-dRecordsCreate"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMdRecordsCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-dRecordsEdit/:id"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMdRecordsEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-femail"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMfemail />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Inventory Management Routes */}
+          <Route
+            path="/inventory-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Inventory manager"]}>
+                <IMDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/IMStoring"
+            element={
+              <ProtectedRoute allowedRoles={["Inventory manager"]}>
+                <IMStoring />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/IMDispatch"
+            element={
+              <ProtectedRoute allowedRoles={["Inventory manager"]}>
+                <IMDispatch />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/IMStoringEdit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Inventory manager"]}>
+                <IMStoringEdit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/IMDispatchEdit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Inventory manager"]}>
+                <IMDispatchEdit />
+              </ProtectedRoute>
+            }
+          />
 
-
-
-
-
-
-
-
-
-          <Route path="/ODMtracker" element={<VehicleTracker />} />
-       
-    
-    </Routes>
-  </Router>
-</StrictMode>
-
+          {/* Order & Delivery Management Routes */}
+          <Route
+            path="/delivery-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
+                <ODMDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ODMhome"
+            element={
+              <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
+                <ODMhome />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ODMview"
+            element={
+              <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
+                <ODMview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ODMedit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
+                <ODMedit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ODinsert"
+            element={
+              <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
+                <ODinsert />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ODMtracker"
+            element={
+              <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
+                <ODMtracker />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 

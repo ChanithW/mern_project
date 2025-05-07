@@ -15,7 +15,7 @@ const EditUser = () => {
     password: "",
     
   });
-
+  
   // Fetch user data by ID
   useEffect(() => {
     const fetchUser = async () => {

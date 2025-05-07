@@ -21,7 +21,7 @@ function FDMdRecordsEdit() {
 
   // Fetch the existing record when the component loads
   useEffect(() => {
-    fetch(`http://localhost:8000/api/getrecord/${id}`) // Adjust the API URL
+    fetch(`http://localhost:5000/api/getrecord/${id}`) // Adjust the API URL
       .then((response) => response.json())
       .then((data) => {
         setFormData({
@@ -49,7 +49,7 @@ function FDMdRecordsEdit() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8000/api/updaterecord/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/updaterecord/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

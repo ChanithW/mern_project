@@ -25,7 +25,6 @@ const userController = require("./controller/userController");
 const fdmController = require("./controller/FDMfScheduleController");
 const fdmdController = require("./controller/FDMdRecordsController");
 const financeController = require("./controller/FMController");
-
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -33,7 +32,24 @@ app.use(cors());
 const server = http.createServer(app); // Create HTTP server
 const io = socketIo(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
 
-// Connect to Database
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+// Serve uploaded images statically
+app.use('/uploads', express.static('uploads'));
+
+// Debug log for financeController
+console.log("financeController:", financeController);
+
+// Connect to MongoDB
 connectDB();
 
 
@@ -113,6 +129,12 @@ io.on('connection', (socket) => {
 
 
 
+// ------------------------
+// API Routes
+// ------------------------
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
 
 // User API Routes
 app.get("/api/users", userController.getAllUsers);
@@ -146,36 +168,48 @@ app.get("/api/getrecord/:id", fdmdController.getRecordById);
 app.put("/api/updaterecord/:id", fdmdController.updateRecord);
 app.delete("/api/deleterecord/:id", fdmdController.deleteRecord);
 
-//finance management - chanith
-// Finance Management
+// Finance Management (Chanith)
 app.get("/api/finance", financeController.getAllFinanceRecords);
 app.get("/api/finance/download", financeController.downloadReport);
 app.get("/api/finance/:id", financeController.getFinanceRecordById);
-app.post("/api/finance", financeController.addFinanceRecord);
-app.put("/api/finance/:id", financeController.updateFinanceRecord);
+app.post("/api/finance", upload.single('image'), financeController.addFinanceRecord);
+app.put("/api/finance/:id", upload.single('image'), financeController.updateFinanceRecord);
 app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
 
-//EM - tuda
+// Employee Management (Tuda)
 app.use("/EMployee", EMregisterroutes);
-//tea-plucking
-app.use("/tea-plucking", teaPluckingRoutes);
+app.use("/tea-plucking", teaPluckingRoutes); // Tea plucking routes
+app.use("/attendance", attendanceRoutes); // Attendance routes
 
-//attendance
-app.use("/attendance", attendanceRoutes);
+// Order & Delivery Management
+app.use("/drive", ODMrouter);
 
-// Order & Delivery Routes
-app.use("/drive", router);
+// ------------------------
+// Socket.IO (Real-Time Tracking)
+// ------------------------
+let devices = {}; // Store connected devices and locations
 
-// Real-Time Tracking Logic
 
+  socket.on("sendLocation", (data) => {
+    devices[socket.id] = data;
+    console.log("Device Location Updated:", data);
+    io.emit("updateLocations", devices); // Broadcast to all clients
+  });
 
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+    delete devices[socket.id];
+    io.emit("updateLocations", devices);
+  });
 
+// Root endpoint
 app.get("/", (req, res) => {
   res.send("Server is running with tracking enabled...");
 });
 
+// ------------------------
+// Start Server
+// ------------------------
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-module.exports = server;

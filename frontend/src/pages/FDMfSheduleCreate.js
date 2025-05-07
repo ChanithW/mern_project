@@ -30,7 +30,7 @@ function FDMfSheduleCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/createschedule", formData);
+      const response = await axios.post("http://localhost:5000/api/createschedule", formData);
       console.log(response.data); 
       alert(response.data.message);
       setFormData({
