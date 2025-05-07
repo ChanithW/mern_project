@@ -189,7 +189,7 @@ function TeaPluckingTable() {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={handleSendToInventory}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow"
+                className="bg-green-500 hover:bg-green-600 text-white text-white font-semibold px-6 py-2 rounded-lg shadow"
               >
                 Send Totals to Inventory
               </button>
