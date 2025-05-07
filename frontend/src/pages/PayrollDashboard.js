@@ -1,9 +1,18 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback, useRef, useMemo } from "react";
 import axios from "axios";
 import { Button, Modal, Label, TextInput, Select } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/header";
 import AuthContext from "../context/AuthContext";
+
+// Debounce utility
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(null, args), delay);
+  };
+};
 
 const PayrollDashboard = () => {
   const [records, setRecords] = useState([]);
@@ -12,21 +21,23 @@ const PayrollDashboard = () => {
   const [employeeId, setEmployeeId] = useState("");
   const [employeeName, setEmployeeName] = useState("");
   const [performanceLevel, setPerformanceLevel] = useState("low");
+  const [dailyWage, setDailyWage] = useState(0);
   const [paymentAmount, setPaymentAmount] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Axios instance with auth header
-  const authAxios = axios.create({
+  // Axios instance with auth header - memoized to prevent recreation on every render
+  const authAxios = useMemo(() => axios.create({
     baseURL: "http://localhost:5000/api",
     headers: {
       Authorization: `Bearer ${token}`
     }
-  });
+  }), [token]);
 
-  const fetchPayrollData = async () => {
+  const fetchPayrollData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await authAxios.get("/payroll");
@@ -41,7 +52,33 @@ const PayrollDashboard = () => {
     } finally {
       setLoading(false);
     }
+  }, [authAxios, navigate]);
+
+  const fetchEmployeeData = async (empId) => {
+    if (!empId || !selectedDate || empId === "") return;
+
+    try {
+      const response = await authAxios.get(`/employee/payment/${empId}`, {
+        params: { date: selectedDate }
+      });
+      setEmployeeName(response.data.employeeName || "");
+      setDailyWage(response.data.dailyWage || 0);
+
+      let bonus = 0;
+      if (performanceLevel === "high") bonus = 3000;
+      else if (performanceLevel === "moderate") bonus = 1000;
+      setPaymentAmount((response.data.dailyWage || 0) + bonus);
+    } catch (err) {
+      console.error("Error fetching employee data:", err);
+      alert("Failed to fetch employee data. Please check the Employee ID and date.");
+      setEmployeeName("");
+      setDailyWage(0);
+      setPaymentAmount(0);
+    }
   };
+
+  // Debounced fetch for employee data
+  const debouncedFetchEmployeeData = useRef(debounce(fetchEmployeeData, 500)).current;
 
   useEffect(() => {
     if (token) {
@@ -49,22 +86,45 @@ const PayrollDashboard = () => {
     } else {
       navigate("/finance-login");
     }
-  }, [token]);
+  }, [token, fetchPayrollData, navigate]);
+
+  // Separate effect to fetch employee data when employeeId or selectedDate changes
+  useEffect(() => {
+    if (employeeId) {
+      debouncedFetchEmployeeData(employeeId);
+    } else {
+      setEmployeeName("");
+      setDailyWage(0);
+      setPaymentAmount(0);
+    }
+  }, [employeeId, selectedDate, debouncedFetchEmployeeData]);
+
+  const handleEmployeeIdChange = (e) => {
+    setEmployeeId(e.target.value);
+  };
+
+  const handlePerformanceChange = (e) => {
+    const level = e.target.value;
+    setPerformanceLevel(level);
+
+    let bonus = 0;
+    if (level === "high") bonus = 3000;
+    else if (level === "moderate") bonus = 1000;
+    setPaymentAmount(dailyWage + bonus);
+  };
+
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
 
   const handleAddPayroll = async () => {
     try {
-      const response = await authAxios.get(`/employee/payment/${employeeId}`);
-      let bonus = 0;
-      if (performanceLevel === "high") bonus = 3000;
-      else if (performanceLevel === "moderate") bonus = 1000;
-      const totalAmount = response.data.amount + bonus;
-      setPaymentAmount(totalAmount);
-
       await authAxios.post("/payroll/add", {
         employeeId,
         employeeName,
         performanceLevel,
-        paymentAmount: totalAmount,
+        dailyWage,
+        paymentAmount,
         date: new Date().toISOString().split("T")[0],
       });
 
@@ -73,7 +133,9 @@ const PayrollDashboard = () => {
       setEmployeeId("");
       setEmployeeName("");
       setPerformanceLevel("low");
+      setDailyWage(0);
       setPaymentAmount(0);
+      setSelectedDate(new Date().toISOString().split("T")[0]);
     } catch (err) {
       console.error("Error adding payroll record:", err);
       alert("Failed to add payroll record. Please try again.");
@@ -188,6 +250,7 @@ const PayrollDashboard = () => {
                   <th className="border border-black p-2 text-left">Employee ID</th>
                   <th className="border border-black p-2">Employee Name</th>
                   <th className="border border-black p-2">Performance Level</th>
+                  <th className="border border-black p-2">Daily Wage (LKR)</th>
                   <th className="border border-black p-2">Payment Amount (LKR)</th>
                   <th className="border border-black p-2">Date</th>
                   <th className="border border-black p-2">Actions</th>
@@ -203,6 +266,7 @@ const PayrollDashboard = () => {
                       <td className="border border-black p-2 text-left">{record.employeeId}</td>
                       <td className="border border-black p-2">{record.employeeName}</td>
                       <td className="border border-black p-2 capitalize">{record.performanceLevel}</td>
+                      <td className="border border-black p-2">{record.dailyWage?.toFixed(2)}</td>
                       <td className="border border-black p-2">{record.paymentAmount?.toFixed(2)}</td>
                       <td className="border border-black p-2">{record.date}</td>
                       <td className="border border-black p-2">
@@ -217,7 +281,7 @@ const PayrollDashboard = () => {
                   ))
                 ) : (
                   <tr className="border border-black">
-                    <td colSpan="6" className="text-center p-4 text-gray-500">
+                    <td colSpan="7" className="text-center p-4 text-gray-500">
                       No payroll records found
                     </td>
                   </tr>
@@ -232,11 +296,20 @@ const PayrollDashboard = () => {
           <Modal.Body>
             <div className="space-y-6">
               <div>
+                <Label htmlFor="date">Select Date for Tea Plucking Record</Label>
+                <TextInput
+                  id="date"
+                  type="date"
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                />
+              </div>
+              <div>
                 <Label htmlFor="employeeId">Employee ID</Label>
                 <TextInput
                   id="employeeId"
                   value={employeeId}
-                  onChange={(e) => setEmployeeId(e.target.value)}
+                  onChange={handleEmployeeIdChange}
                   placeholder="Enter Employee ID"
                 />
               </div>
@@ -245,8 +318,17 @@ const PayrollDashboard = () => {
                 <TextInput
                   id="employeeName"
                   value={employeeName}
-                  onChange={(e) => setEmployeeName(e.target.value)}
-                  placeholder="Enter Employee Name"
+                  readOnly
+                  placeholder="Will be fetched"
+                />
+              </div>
+              <div>
+                <Label htmlFor="dailyWage">Daily Wage (LKR)</Label>
+                <TextInput
+                  id="dailyWage"
+                  value={dailyWage.toFixed(2)}
+                  readOnly
+                  placeholder="Will be fetched"
                 />
               </div>
               <div>
@@ -254,7 +336,7 @@ const PayrollDashboard = () => {
                 <Select
                   id="performanceLevel"
                   value={performanceLevel}
-                  onChange={(e) => setPerformanceLevel(e.target.value)}
+                  onChange={handlePerformanceChange}
                 >
                   <option value="low">Low</option>
                   <option value="moderate">Moderate</option>

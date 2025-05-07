@@ -38,6 +38,7 @@ import FMRead from "./pages/FMRead.js";
 import FMCreate from "./pages/FMCreate.js";
 import FMUpdate from "./pages/FMUpdate.js";
 import FMDelete from "./pages/FMDelete.js";
+import PayrollDashboard from "./pages/PayrollDashboard.js"; // Import PayrollDashboard
 
 // Admin Routes
 import AdminLogin from "./pages/AdminLogin.js";
@@ -153,6 +154,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["Finance officer", "Owner"]}>
                 <FMDelete />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/payroll-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Finance officer", "Owner"]}>
+                <PayrollDashboard />
               </ProtectedRoute>
             }
           />
