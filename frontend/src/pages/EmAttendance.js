@@ -3,6 +3,7 @@ import axios from 'axios';
 import { format, parseISO } from 'date-fns';
 import Modal from 'react-modal';
 import Header from '../components/header';
+import { useNavigate } from 'react-router-dom'; // <-- use useNavigate, not Navigate
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -14,6 +15,8 @@ const EmAttendance = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const navigate = useNavigate(); // <-- initialize navigate
+
   useEffect(() => {
     fetchRecords();
   }, []);
@@ -23,11 +26,9 @@ const EmAttendance = () => {
     setError('');
     try {
       const response = await axios.get('http://localhost:8000/attendance');
-      console.log('Fetched records:', response.data.attendance);
       setRecords(response.data.attendance);
     } catch (err) {
       setError('Failed to fetch records. Please try again.');
-      console.error('Error fetching records:', err);
     } finally {
       setLoading(false);
     }
@@ -37,18 +38,20 @@ const EmAttendance = () => {
     setSearchDate(e.target.value);
   };
 
+  const handleQRScan = () => {
+    navigate("/QrScanner");
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return 'Invalid date';
     try {
       return format(parseISO(dateString), 'MMM d, yyyy h:mm a');
     } catch (error) {
-      console.error('Error formatting date:', error);
       return 'Invalid date';
     }
   };
 
   const handleRowClick = (employee) => {
-    console.log('Employee clicked:', employee);
     setSelectedEmployee(employee);
     setIsModalOpen(true);
   };
@@ -71,11 +74,11 @@ const EmAttendance = () => {
   };
 
   const filteredRecords = searchDate
-  ? records.filter((record) => {
-      const recordDate = format(parseISO(record.checkInTime), 'yyyy-MM-dd'); // local timezone
-      return recordDate === searchDate;
-    })
-  : records;
+    ? records.filter((record) => {
+        const recordDate = format(parseISO(record.checkInTime), 'yyyy-MM-dd');
+        return recordDate === searchDate;
+      })
+    : records;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -93,6 +96,12 @@ const EmAttendance = () => {
                 onChange={handleDateChange}
                 className="border rounded-lg px-4 py-2"
               />
+              <button
+                onClick={handleQRScan}
+                className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition duration-200"
+              >
+                QR Code
+              </button>
             </div>
           </div>
 
@@ -157,8 +166,6 @@ const EmAttendance = () => {
       </div>
     </div>
   );
-
-
 };
 
 export default EmAttendance;

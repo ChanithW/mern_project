@@ -60,7 +60,7 @@ const EmployeeDashboard = () => {
               />
               <DashboardCard
                 title="Employee Attendance"
-                buttonText="View Performance"
+                buttonText="View Attendance"
                 cardClass="border-green-500 bg-white-100"
                 imgSrc={catImg}
                 imgAlt="Performance"
