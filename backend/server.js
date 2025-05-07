@@ -90,7 +90,7 @@ app.put("/api/finance/:id", upload.single('image'), financeController.updateFina
 app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
 
 // Employee Management
-app.use("/EMployee", EMregisterRoutes);
+app.use("/employee", EMregisterRoutes);
 app.use("/tea-plucking", teaPluckingRoutes);
 app.use("/attendance", attendanceRoutes);
 
