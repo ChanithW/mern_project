@@ -10,7 +10,7 @@ const FMDelete = () => {
   // Fetch the record details
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/finance/${id}`)
+      .get(`http://localhost:8000/api/finance/${id}`)
       .then((res) => setRecord(res.data))
       .catch((err) => console.error(err));
   }, [id]);
@@ -18,7 +18,7 @@ const FMDelete = () => {
   // Handle delete request
   const handleDelete = () => {
     axios
-      .delete(`http://localhost:5000/api/finance/${id}`)
+      .delete(`http://localhost:8000/api/finance/${id}`)
       .then(() => {
         alert("Deleted!", "Your record has been deleted.", "success");
         navigate("/finance-dashboard");
@@ -51,7 +51,7 @@ const FMDelete = () => {
             {record.image ? (
               <div className="mt-2">
                 <img
-                  src={`http://localhost:5000${record.image}`}
+                  src={`http://localhost:8000${record.image}`}
                   alt="Transaction"
                   className="w-32 h-32 object-cover mx-auto"
                 />

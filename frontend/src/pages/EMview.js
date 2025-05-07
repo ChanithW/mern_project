@@ -12,7 +12,7 @@ function EMview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/EMployee");
+        const response = await axios.get("http://localhost:8000/EMployee");
         setEmployee(response.data.employee);
       } catch (err) {
         console.error("Error fetching data", err);
@@ -27,8 +27,8 @@ function EMview() {
     );
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/EMployee/${id}`);
-        const response = await axios.get("http://localhost:5000/EMployee");
+        await axios.delete(`http://localhost:8000/EMployee/${id}`);
+        const response = await axios.get("http://localhost:8000/EMployee");
         setEmployee(response.data.employee);
       } catch (err) {
         console.error("Error deleting record", err);

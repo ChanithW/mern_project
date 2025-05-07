@@ -29,7 +29,7 @@ function FDMdRecordsCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/createdrecord", formData);
+      const response = await axios.post("http://localhost:8000/api/createdrecord", formData);
       console.log(response.data); 
       alert(response.data.message);
       setFormData({

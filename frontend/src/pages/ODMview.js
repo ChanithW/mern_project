@@ -14,7 +14,7 @@ function ODMview() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/drive");
+        const response = await axios.get("http://localhost:8000/drive");
         setDeliveries(response.data.drive);
       } catch (err) {
         console.error("Error fetching data", err);
@@ -26,7 +26,7 @@ function ODMview() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        await axios.delete(`http://localhost:5000/drive/${id}`);
+        await axios.delete(`http://localhost:8000/drive/${id}`);
         setDeliveries(deliveries.filter((delivery) => delivery._id !== id));
       } catch (err) {
         console.error("Error deleting record", err);

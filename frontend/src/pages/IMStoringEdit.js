@@ -13,7 +13,7 @@ export default function IMStoringEdit() {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/tstock/${id}`);
+        const response = await axios.get(`http://localhost:8000/tstock/${id}`);
         setTStock(response.data.tStock)
       } catch (err) {
         console.error("Error fetching stock data", err);
@@ -45,7 +45,7 @@ export default function IMStoringEdit() {
       if (formData.Date) updatedData.Date = formData.Date;
       if (formData.totalAmount) updatedData.totalAmount = Number(formData.totalAmount);
 
-      await axios.put(`http://localhost:5000/tstock/${id}`, updatedData);
+      await axios.put(`http://localhost:8000/tstock/${id}`, updatedData);
       navigate("/IMStoring");
     } catch (err) {
       console.error("Failed to update stock.", err);

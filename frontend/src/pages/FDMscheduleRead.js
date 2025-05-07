@@ -9,7 +9,7 @@ function FDMscheduleRead() {
 
   // Fetch schedules from the backend
   useEffect(() => {
-    fetch("http://localhost:5000/api/getschedules")
+    fetch("http://localhost:8000/api/getschedules")
       .then((response) => response.json())
       .then((data) => setScheduleData(data))
       .catch((error) => console.error("Error fetching schedules:", error));
@@ -26,7 +26,7 @@ function FDMscheduleRead() {
       "Are you sure you want to delete this entry?"
     );
     if (confirmDelete) {
-      fetch(`http://localhost:5000/api/schedules/${id}`, {
+      fetch(`http://localhost:8000/api/schedules/${id}`, {
         method: "DELETE",
       })
         .then((response) => {

@@ -31,7 +31,7 @@ function FDMfScheduleEdit() {
 
   // Fetch existing data when component mounts
   useEffect(() => {
-    fetch(`http://localhost:5000/api/schedules/${id}`)
+    fetch(`http://localhost:8000/api/schedules/${id}`)
       .then((response) => response.json())
       .then((data) => {
         setFormData({
@@ -61,7 +61,7 @@ function FDMfScheduleEdit() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/updateschedule/${id}`,
+        `http://localhost:8000/api/updateschedule/${id}`,
         {
           method: "PUT",
           headers: {

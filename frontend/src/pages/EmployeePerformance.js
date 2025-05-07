@@ -12,7 +12,7 @@ const EmployeePerformance = () => {
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const response = await fetch("http://localhost:5000/tea-plucking");
+        const response = await fetch("http://localhost:8000/tea-plucking");
         const data = await response.json();
         
         // Aggregate plucking data by employee

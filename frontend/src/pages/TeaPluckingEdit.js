@@ -19,7 +19,7 @@ function TeaPluckingEdit() {
     // Fetch existing tea plucking record
     const fetchRecord = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/tea-plucking/record/${id}`);
+        const response = await axios.get(`http://localhost:8000/tea-plucking/record/${id}`);
         setFormData(response.data.record);
       } catch (err) {
         console.error("Error fetching tea plucking record", err);
@@ -47,7 +47,7 @@ function TeaPluckingEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/tea-plucking/${id}`, formData);
+      await axios.put(`http://localhost:8000/tea-plucking/${id}`, formData);
       alert("Tea plucking record updated successfully!");
       navigate("/TeaPluckingTable"); // Redirect to tea plucking records view
     } catch (err) {

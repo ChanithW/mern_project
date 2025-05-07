@@ -21,7 +21,7 @@ function TeaPluckingTable() {
     setError('');
 
     try {
-      const response = await axios.get(`http://localhost:5000/tea-plucking/date/${date}`);
+      const response = await axios.get(`http://localhost:8000/tea-plucking/date/${date}`);
 
       if (response.data.records) {
         setRecords(response.data.records);
@@ -38,7 +38,7 @@ function TeaPluckingTable() {
     const isConfirmed = window.confirm("Are you sure you want to delete this record?");
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/tea-plucking/${id}`);
+        await axios.delete(`http://localhost:8000/tea-plucking/${id}`);
         fetchRecordsByDate(selectedDate); // Refresh list
       } catch (err) {
         console.error("Error deleting record", err);

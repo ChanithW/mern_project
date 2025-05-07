@@ -14,7 +14,7 @@ export default function IMStoringEdit() {
   useEffect(() => {
     const fetchDispatch = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/tdispatch/${id}`);
+        const response = await axios.get(`http://localhost:8000/tdispatch/${id}`);
         setTDispatch(response.data.tDispatch);
       } catch (err) {
         console.error("Error fetching stock data", err);
@@ -23,7 +23,7 @@ export default function IMStoringEdit() {
 
     const fetchAllStockIds = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/tdispatch");
+        const response = await axios.get("http://localhost:8000/tdispatch");
         const stockIds = response.data.tDispatch.map((item) => item.StockId);
         setExistingStockIds(stockIds);
       } catch (err) {
@@ -109,7 +109,7 @@ export default function IMStoringEdit() {
         Location: formData.Location,
       };
 
-      await axios.put(`http://localhost:5000/tdispatch/${id}`, updatedData);
+      await axios.put(`http://localhost:8000/tdispatch/${id}`, updatedData);
       navigate("/IMDispatch");
     } catch (err) {
       console.error("Failed to update stock.", err);
