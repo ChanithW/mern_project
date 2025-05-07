@@ -18,7 +18,7 @@ export default function IMStoring() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/tstock");
+        const response = await axios.get("http://localhost:5000/tstock");
         setTStock(response.data.tStock);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -59,19 +59,12 @@ export default function IMStoring() {
     }
 
     try {
-      await axios.post("http://localhost:8000/tstock", formData);
-      setFormData({ Date: "", totalAmount: "" });
-
-      const response = await axios.get("http://localhost:8000/tstock");
-      setTStock(response.data.tStock);
-    } catch (err) {
-      console.error("Failed to add stock.");
       console.log("Submitting form data:", {
         date: formData.Date,
         totalAmount: Number(formData.totalAmount)
       });
 
-      const response = await axios.post("http://localhost:8000/tstock", {
+      const response = await axios.post("http://localhost:5000/tstock", {
         date: formData.Date,
         totalAmount: Number(formData.totalAmount)
       });
@@ -89,7 +82,7 @@ export default function IMStoring() {
         }, 3000);
         
         // Refresh the stock list
-        const updatedResponse = await axios.get("http://localhost:8000/tstock");
+        const updatedResponse = await axios.get("http://localhost:5000/tstock");
         setTStock(updatedResponse.data.tStock);
       }
     } catch (error) {
@@ -108,7 +101,7 @@ export default function IMStoring() {
   const checkTodayRecord = async () => {
     try {
       const today = new Date().toISOString().split("T")[0];
-      const response = await axios.get("http://localhost:8000/tstock");
+      const response = await axios.get("http://localhost:5000/tstock");
       const todayRecord = response.data.tStock.find(
         (record) => new Date(record.Date).toISOString().split("T")[0] === today
       );
@@ -135,8 +128,8 @@ export default function IMStoring() {
     const isConfirmed = window.confirm("Are you sure you want to delete this record?");
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/tstock/${id}`);
-        const response = await axios.get("http://localhost:8000/tstock");
+        await axios.delete(`http://localhost:5000/tstock/${id}`);
+        const response = await axios.get("http://localhost:5000/tstock");
         setTStock(response.data.tStock);
       } catch (err) {
         console.error("Error deleting stock", err);

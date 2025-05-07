@@ -11,7 +11,7 @@ const QRScanner = () => {
     const markAttendance = async (employeeData) => {
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:8000/attendance', {
+            const response = await axios.post('http://localhost:5000/attendance', {
                 ...employeeData,
                 status: 'present' // Default status
             });

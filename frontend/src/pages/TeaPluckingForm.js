@@ -19,7 +19,7 @@ const TeaPluckingForm = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/tea-plucking/employees/nonP');
+        const response = await axios.get('http://localhost:5000/tea-plucking/employees/nonP');
         setEmployees(response.data.employees || []);
       } catch (error) {
         console.error('Error fetching employees:', error);
@@ -62,7 +62,7 @@ const TeaPluckingForm = () => {
     setLoading(true);
     setMessage('');
     try {
-      await axios.post('http://localhost:8000/tea-plucking', formData);
+      await axios.post('http://localhost:5000/tea-plucking', formData);
       setMessage('Record added successfully!');
       setFormData({
         employeeId: '',

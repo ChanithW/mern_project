@@ -39,7 +39,7 @@ function AttendanceScanner() {
         setAttendanceInfo(attendanceData);
         
         // Send attendance data to your API
-        const response = await axios.post('http://localhost:8000/attendance', attendanceData);
+        const response = await axios.post('http://localhost:5000/attendance', attendanceData);
         
         if (response.status === 200 || response.status === 201) {
           setAttendanceMarked(true);

@@ -1,60 +1,105 @@
 const express = require('express');
-const connectDB = require('./database/db'); // Import DB connection
-const routerIM = require("./routes/IMStoreRouter");
-const routerdisptcher = require("./routes/IMDispatchRouter");
-require('dotenv').config();
-const EMregisterroutes = require("./routes/EMregisterroutes");
-const teaPluckingRoutes = require("./routes/teaPluckingRoutes");
-const attendanceRoutes = require("./routes/AttendenceRouts");
-const routeremail = require("./routes/emailRoutes");
-require('dotenv').config(); // Load environment variables
-const EMregisterroutes = require("./routes/EMregisterroutes");
-const teaPluckingRoutes = require("./routes/teaPluckingRoutes");
-const attendanceRoutes = require("./routes/AttendenceRouts");
-const router = require("./Routes/ODMdrive");
-const PORT = process.env.PORT || 5000;
-
-
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const multer = require('multer');
+const path = require('path');
 const http = require("http");
 const socketIo = require("socket.io");
-const cors = require("cors");
-const mongoose = require('mongoose');
 
+const connectDB = require('./database/db');
 
-const userController = require("./controller/userController");
-const fdmController = require("./controller/FDMfScheduleController");
-const fdmdController = require("./controller/FDMdRecordsController");
-const financeController = require("./controller/FMController");
+// Load environment variables
+dotenv.config();
+
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
+
+// Middleware
 app.use(express.json());
 app.use(cors());
 
-const server = http.createServer(app); // Create HTTP server
-const io = socketIo(server, { cors: { origin: "*", methods: ["GET", "POST"] } });
-
-// Multer configuration for file uploads
+// Multer config
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
+  destination: (req, file, cb) => cb(null, 'uploads/'),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
-const upload = multer({ storage: storage });
-
-// Serve uploaded images statically
+const upload = multer({ storage });
 app.use('/uploads', express.static('uploads'));
-
-// Debug log for financeController
-console.log("financeController:", financeController);
 
 // Connect to MongoDB
 connectDB();
 
+// ------------------------
+// Controllers & Routes
+// ------------------------
+const userController = require("./controller/userController");
+const fdmController = require("./controller/FDMfScheduleController");
+const fdmdController = require("./controller/FDMdRecordsController");
+const financeController = require("./controller/FMController");
 
+const authRoutes = require('./routes/authRoutes');
+const routerIM = require("./routes/IMStoreRouter");
+const routerDispatcher = require("./routes/IMDispatchRouter");
+const routerEmail = require("./routes/emailRoutes");
+const EMregisterRoutes = require("./routes/EMregisterroutes");
+const teaPluckingRoutes = require("./routes/teaPluckingRoutes");
+const attendanceRoutes = require("./routes/AttendenceRouts");
+const ODMrouter = require("./Routes/ODMdrive");
 
+// ------------------------
+// API Routes
+// ------------------------
 
+// Auth
+app.use('/api/auth', authRoutes);
+
+// Users
+app.get("/api/users", userController.getAllUsers);
+app.get("/api/users/:id", userController.getUserById);
+app.post("/api/users", userController.addUser);
+app.put("/api/users/:id", userController.editUser);
+app.delete("/api/users/:id", userController.deleteUser);
+
+// Inventory Management
+app.use("/tstock", routerIM);
+app.use("/tdispatch", routerDispatcher);
+app.use("/api/email", routerEmail);
+
+// Field Management - Schedules
+app.post("/api/createschedule", fdmController.createSchedule);
+app.get("/api/getschedules", fdmController.getSchedules);
+app.get("/api/schedules/:id", fdmController.getScheduleById);
+app.put("/api/updateschedule/:id", fdmController.updateSchedule);
+app.delete("/api/schedules/:id", fdmController.deleteSchedule);
+
+// Field Management - Daily Records
+app.post("/api/createdrecord", fdmdController.createRecord);
+app.get("/api/getrecords", fdmdController.getRecords);
+app.get("/api/getrecord/:id", fdmdController.getRecordById);
+app.put("/api/updaterecord/:id", fdmdController.updateRecord);
+app.delete("/api/deleterecord/:id", fdmdController.deleteRecord);
+
+// Finance Management
+app.get("/api/finance", financeController.getAllFinanceRecords);
+app.get("/api/finance/download", financeController.downloadReport);
+app.get("/api/finance/:id", financeController.getFinanceRecordById);
+app.post("/api/finance", upload.single('image'), financeController.addFinanceRecord);
+app.put("/api/finance/:id", upload.single('image'), financeController.updateFinanceRecord);
+app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
+
+// Employee Management
+app.use("/EMployee", EMregisterRoutes);
+app.use("/tea-plucking", teaPluckingRoutes);
+app.use("/attendance", attendanceRoutes);
+
+// Order & Delivery Management
+app.use("/drive", ODMrouter);
+
+// ------------------------
+// Vehicle Tracking (MongoDB + Socket.IO)
+// ------------------------
 const vehicleSchema = new mongoose.Schema({
   vehicleId: { type: String, required: true, unique: true },
   lastLocation: {
@@ -70,7 +115,7 @@ const vehicleSchema = new mongoose.Schema({
 });
 const Vehicle = mongoose.model('Vehicle', vehicleSchema);
 
-// --- Vehicle Tracking REST APIs ---
+// REST APIs for vehicles
 app.post('/api/vehicles', async (req, res) => {
   try {
     const { vehicleId } = req.body;
@@ -91,7 +136,7 @@ app.get('/api/vehicles', async (req, res) => {
   }
 });
 
-// --- WebSocket: Real-time Tracking ---
+// Real-time location tracking
 io.on('connection', (socket) => {
   console.log('New client connected');
 
@@ -121,88 +166,14 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
   });
 });
 
-
-
-
 // ------------------------
-// API Routes
+// Root Endpoint
 // ------------------------
-
-const authRoutes = require('./routes/authRoutes');
-app.use('/api/auth', authRoutes);
-
-// User API Routes
-app.get("/api/users", userController.getAllUsers);
-app.get("/api/users/:id", userController.getUserById);
-app.post("/api/users", userController.addUser);
-app.put("/api/users/:id", userController.editUser);
-app.delete("/api/users/:id", userController.deleteUser);
-
-//IM - Amath
-app.use("/tstock", routerIM);
-//IM DS - Amath
-app.use("/tdispatch", routerdisptcher);
-//IM sms - Amath
-app.use("/api/email", routeremail);
-
-//chim-schedules
-//app.use(smsRoutes);
-
-// Field Management Schedules
-app.post("/api/createschedule", fdmController.createSchedule);
-app.get("/api/getschedules", fdmController.getSchedules);
-app.put("/api/updateschedule/:id", fdmController.updateSchedule);
-app.delete("/api/schedules/:id", fdmController.deleteSchedule);
-app.get("/api/schedules/:id", fdmController.getScheduleById);
-
-//chim-records
-// Field Management Daily Records
-app.post("/api/createdrecord", fdmdController.createRecord);
-app.get("/api/getrecords", fdmdController.getRecords);
-app.get("/api/getrecord/:id", fdmdController.getRecordById);
-app.put("/api/updaterecord/:id", fdmdController.updateRecord);
-app.delete("/api/deleterecord/:id", fdmdController.deleteRecord);
-
-// Finance Management (Chanith)
-app.get("/api/finance", financeController.getAllFinanceRecords);
-app.get("/api/finance/download", financeController.downloadReport);
-app.get("/api/finance/:id", financeController.getFinanceRecordById);
-app.post("/api/finance", upload.single('image'), financeController.addFinanceRecord);
-app.put("/api/finance/:id", upload.single('image'), financeController.updateFinanceRecord);
-app.delete("/api/finance/:id", financeController.deleteFinanceRecord);
-
-// Employee Management (Tuda)
-app.use("/EMployee", EMregisterroutes);
-app.use("/tea-plucking", teaPluckingRoutes); // Tea plucking routes
-app.use("/attendance", attendanceRoutes); // Attendance routes
-
-// Order & Delivery Management
-app.use("/drive", ODMrouter);
-
-// ------------------------
-// Socket.IO (Real-Time Tracking)
-// ------------------------
-let devices = {}; // Store connected devices and locations
-
-
-  socket.on("sendLocation", (data) => {
-    devices[socket.id] = data;
-    console.log("Device Location Updated:", data);
-    io.emit("updateLocations", devices); // Broadcast to all clients
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-    delete devices[socket.id];
-    io.emit("updateLocations", devices);
-  });
-
-// Root endpoint
 app.get("/", (req, res) => {
   res.send("Server is running with tracking enabled...");
 });
@@ -210,6 +181,7 @@ app.get("/", (req, res) => {
 // ------------------------
 // Start Server
 // ------------------------
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

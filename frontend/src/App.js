@@ -25,9 +25,9 @@ import FDMdRecordsEdit from "./pages/FDMdRecordsEdit.js";
 import FDMfertilizerGenerator from "./pages/FDMfertilizerGenerator.js";
 import FDMdDiseaseRemedies from "./pages/FDMdDiseaseRemedies.js";
 
-import Aboutus from "./pages/Aboutus.js"
+import Aboutus from "./pages/Aboutus.js";
 import FAQ from "./pages/FAQ.js";
-import FDMfemail from "./pages/FDMfemail"
+import FDMfemail from "./pages/FDMfemail";
 
 import AddUsers from "./pages/AddUsers";
 import EditUser from "./pages/EditUser";
@@ -38,7 +38,6 @@ import FMRead from "./pages/FMRead.js";
 import FMCreate from "./pages/FMCreate.js";
 import FMUpdate from "./pages/FMUpdate.js";
 import FMDelete from "./pages/FMDelete.js";
-
 
 // Admin Routes
 import AdminLogin from "./pages/AdminLogin.js";
@@ -56,7 +55,7 @@ import QrScanner from "./pages/QrCodeScanner.js";
 import AttendanceList from "./pages/AttendanceList.js";
 import EmployeePerformance from "./pages/EmployeePerformance.js";
 import EmployeeDashboard from "./pages/EmployeeDashboard.js";
-import EmAttendance from "./pages/EmAttendance.js"
+import EmAttendance from "./pages/EmAttendance.js";
 
 // Order & Delivery Management Routes
 import ODMdriverlogin from "./pages/ODMdriverlogin.js";
@@ -92,7 +91,6 @@ function App() {
           <Route path="/inventory-login" element={<InventoryLogin />} />
           <Route path="/delivery-login" element={<DeliveryLogin />} />
 
-
           {/* Legacy Login Routes (to be deprecated) */}
           <Route path="/IMLogin" element={<IMLogin />} />
           <Route path="/fdm-login" element={<FDMLogin />} />
@@ -107,7 +105,7 @@ function App() {
                 <AdminDashboard />
               </ProtectedRoute>
             }
-          />  
+          />
           <Route
             path="/add-user"
             element={
@@ -240,6 +238,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/EmAttendance"
+            element={
+              <ProtectedRoute allowedRoles={["Estate manager"]}>
+                <EmAttendance />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Fertilization & Disease Management Routes */}
           <Route
@@ -319,6 +325,26 @@ function App() {
                 allowedRoles={["Agricultural technician", "Supervisor"]}
               >
                 <FDMfemail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-fertilizerGenerator"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMfertilizerGenerator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fdm-dDiseaseRemedies"
+            element={
+              <ProtectedRoute
+                allowedRoles={["Agricultural technician", "Supervisor"]}
+              >
+                <FDMdDiseaseRemedies />
               </ProtectedRoute>
             }
           />
@@ -410,7 +436,7 @@ function App() {
             path="/ODMtracker"
             element={
               <ProtectedRoute allowedRoles={["Driver", "Inventory manager"]}>
-                <ODMtracker />
+                <VehicleTracker />
               </ProtectedRoute>
             }
           />

@@ -22,7 +22,7 @@ const EmAttendance = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:8000/attendance');
+      const response = await axios.get('http://localhost:5000/attendance');
       console.log('Fetched records:', response.data.attendance);
       setRecords(response.data.attendance);
     } catch (err) {

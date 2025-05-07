@@ -31,7 +31,7 @@ function EMedit() {
     // Fetch existing employee data
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/EMployee/${id}`);
+        const response = await axios.get(`http://localhost:5000/EMployee/${id}`);
         const fetchedEmployee = response.data.employee;
         setFormData(fetchedEmployee);
 
@@ -113,7 +113,7 @@ function EMedit() {
     }
 
     try {
-      await axios.put(`http://localhost:8000/EMployee/${id}`, formData);
+      await axios.put(`http://localhost:5000/EMployee/${id}`, formData);
       setMessage("Employee updated successfully!");
       setTimeout(() => navigate("/EMview"), 2000); // Redirect after 2 seconds
     } catch (err) {

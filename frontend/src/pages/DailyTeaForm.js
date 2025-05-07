@@ -12,7 +12,7 @@ const DailyTeaForm = () => {
     const dailyTeaData = { employeeId, dailyKg, dailyWages };
 
     try {
-      const response = await axios.post("http://localhost:8000/dailyTea", dailyTeaData);
+      const response = await axios.post("http://localhost:5000/dailyTea", dailyTeaData);
       console.log("Daily tea record added:", response.data);
       alert("Daily tea record saved successfully!");
       setEmployeeId("");

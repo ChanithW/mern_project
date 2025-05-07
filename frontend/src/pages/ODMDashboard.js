@@ -27,7 +27,7 @@ const OrderDeliveryDashboard = () => {
           title="Track Delivery Vehicle"
           buttonText="Track Vehicle"
           cardClass="border-blue-500 bg-white-100"
-          navigateTo="/ODMdriverlogin"
+          navigateTo="/ODMtracker"
         />
       </div>
     </div>

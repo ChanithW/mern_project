@@ -18,7 +18,7 @@ function AttendanceList() {
   const fetchAttendanceData = async () => {
     setLoading(true);
     try {
-      let url = 'http://localhost:8000/attendance';
+      let url = 'http://localhost:5000/attendance';
       
       // Add query parameters for filtering by date
       if (filter !== 'all') {
