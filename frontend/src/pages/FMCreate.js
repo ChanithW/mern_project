@@ -34,7 +34,7 @@ const FMCreate = () => {
     }
   
     try {
-      await axios.post("http://localhost:5000/api/finance", data, {
+      await axios.post("http://localhost:8000/api/finance", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Record added successfully!");

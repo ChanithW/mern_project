@@ -9,7 +9,7 @@ function FDMdRecordsRead() {
 
   // Fetch disease records from the backend
   useEffect(() => {
-    fetch("http://localhost:5000/api/getrecords")
+    fetch("http://localhost:8000/api/getrecords")
       .then((response) => response.json())
       .then((data) => setDiseaseData(data))
       .catch((error) => console.error("Error fetching records:", error));
@@ -24,7 +24,7 @@ function FDMdRecordsRead() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        const response = await fetch(`http://localhost:5000/api/deleterecord/${id}`, {
+        const response = await fetch(`http://localhost:8000/api/deleterecord/${id}`, {
           method: "DELETE",
         });
 

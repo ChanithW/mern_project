@@ -12,7 +12,7 @@ const AdminDashboard = () => {
   // Fetch users from backend
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/users")
+      .get("http://localhost:8000/api/users")
       .then((res) => setUsers(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
   // Handle user deletion
   const handleDelete = (userId) => {
     axios
-      .delete(`http://localhost:5000/api/users/${userId}`)
+      .delete(`http://localhost:8000/api/users/${userId}`)
       .then(() => {
         setUsers(users.filter((user) => user._id !== userId));
         Swal.fire({

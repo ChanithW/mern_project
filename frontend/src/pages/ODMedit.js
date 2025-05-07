@@ -26,7 +26,7 @@ export default function ODMedit() {
   useEffect(() => {
     const fetchDelivery = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/drive/${id}`);
+        const response = await axios.get(`http://localhost:8000/drive/${id}`);
         setDrive(response.data.drive);
         setFormData(response.data.drive);
       } catch (err) {
@@ -46,7 +46,7 @@ export default function ODMedit() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/drive/${id}`, formData);
+      await axios.put(`http://localhost:8000/drive/${id}`, formData);
       navigate("/ODMview");
     } catch (err) {
       console.error("Failed to update delivery details.", err);

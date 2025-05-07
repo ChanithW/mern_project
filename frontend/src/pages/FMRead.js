@@ -17,7 +17,7 @@ const FMRead = () => {
 
   // Axios instance with auth header
   const authAxios = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "http://localhost:8000/api",
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -216,7 +216,7 @@ const FMRead = () => {
                       <td className="border border-black p-2">
                         {record.image ? (
                           <img
-                            src={`http://localhost:5000${record.image}`}
+                            src={`http://localhost:8000${record.image}`}
                             alt="Transaction"
                             className="w-16 h-16 object-cover mx-auto"
                           />
@@ -276,7 +276,7 @@ const FMRead = () => {
                       <td className="border border-black p-2">
                         {record.image ? (
                           <img
-                            src={`http://localhost:5000${record.image}`}
+                            src={`http://localhost:8000${record.image}`}
                             alt="Transaction"
                             className="w-16 h-16 object-cover mx-auto"
                           />

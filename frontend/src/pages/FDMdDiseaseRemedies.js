@@ -1,9 +1,12 @@
 import { useState } from "react";
 import Header from "../components/header";
+import { useNavigate } from "react-router-dom";
+import { jsPDF } from "jspdf";
 
 export default function DiseaseRemedies() {
   const [selectedDisease, setSelectedDisease] = useState("");
   const [remedies, setRemedies] = useState(null);
+  const navigate = useNavigate();
 
   const diseaseData = {
     // From disease.pdf
@@ -415,6 +418,77 @@ export default function DiseaseRemedies() {
     setRemedies(null);
   };
 
+  const generatePDF = () => {
+    if (!selectedDisease || !remedies) return;
+
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.setTextColor(0, 100, 0); // Dark green color
+    doc.text(`${selectedDisease} - Treatment Recommendations`, 105, 15, { align: 'center' });
+    
+    // Add current date
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    const today = new Date();
+    doc.text(`Generated on: ${today.toLocaleDateString()}`, 105, 22, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+    
+    let yPosition = 35;
+    
+    // Function to add content recursively
+    const addContent = (obj, indent = 0) => {
+      Object.entries(obj).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          doc.setFont('helvetica', 'bold');
+          doc.text(`${key}:`, 15 + indent, yPosition);
+          yPosition += 7;
+          
+          value.forEach((item, index) => {
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Option ${index + 1}:`, 20 + indent, yPosition);
+            yPosition += 7;
+            addContent(item, indent + 10);
+          });
+        } else if (typeof value === 'object' && value !== null) {
+          doc.setFont('helvetica', 'bold');
+          doc.text(`${key}:`, 15 + indent, yPosition);
+          yPosition += 7;
+          addContent(value, indent + 10);
+        } else {
+          doc.setFont('helvetica', 'normal');
+          const text = `${key}: ${value}`;
+          const lines = doc.splitTextToSize(text, 180 - indent);
+          doc.text(lines, 15 + indent, yPosition);
+          yPosition += lines.length * 7;
+        }
+        
+        // Add new page if needed
+        if (yPosition > 280) {
+          doc.addPage();
+          yPosition = 20;
+        }
+      });
+    };
+    
+    // Add the remedies content
+    addContent(remedies);
+    
+    // Add safety note
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(150, 0, 0);
+    doc.text('Important Safety Note:', 15, yPosition + 10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0);
+    doc.text('Always use appropriate Personal Protective Equipment (PPE) when handling and applying pesticides.', 15, yPosition + 20);
+    
+    // Save the PDF
+    doc.save(`${selectedDisease}_Remedies.pdf`);
+  };
+
   const renderRemedies = () => {
     if (!remedies) return null;
 
@@ -454,7 +528,18 @@ export default function DiseaseRemedies() {
 
     return (
       <div className="bg-white p-5 rounded shadow border border-green-400">
-        <h3 className="text-lg font-bold text-green-700">{selectedDisease} Remedies</h3>
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-bold text-green-700">{selectedDisease} Remedies</h3>
+          <button 
+            onClick={generatePDF}
+            className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600 flex items-center"
+          >
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download as PDF
+          </button>
+        </div>
         <div className="mt-4 space-y-4">
           {renderObject(remedies)}
         </div>
@@ -471,6 +556,14 @@ export default function DiseaseRemedies() {
       <Header />
       <div className="flex bg-green-100 min-h-screen p-10">
         <div className="w-1/2 bg-white p-5 rounded shadow border border-green-400">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="mb-4 px-4 py-2 bg-green-700 text-white rounded hover:bg-green-600"
+          >
+            Back
+          </button>
+
           <h2 className="text-xl font-bold text-green-700">Disease Remedy Finder</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

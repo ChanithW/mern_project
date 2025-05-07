@@ -18,7 +18,7 @@ const FMUpdate = () => {
   // Fetch existing data
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/finance/${id}`)
+      .get(`http://localhost:8000/api/finance/${id}`)
       .then((res) => setFormData(res.data))
       .catch((err) => console.error("Error fetching record:", err));
   }, [id]);
@@ -46,7 +46,7 @@ const FMUpdate = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/finance/${id}`, data, {
+      await axios.put(`http://localhost:8000/api/finance/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Record updated successfully!");
@@ -115,7 +115,7 @@ const FMUpdate = () => {
               <label className="block font-semibold">Current Image</label>
               {formData.image ? (
                 <img
-                  src={`http://localhost:5000${formData.image}`}
+                  src={`http://localhost:8000${formData.image}`}
                   alt="Current Transaction"
                   className="w-32 h-32 object-cover mb-2"
                 />

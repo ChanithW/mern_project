@@ -20,7 +20,7 @@ const PayrollDashboard = () => {
 
   // Axios instance with auth header
   const authAxios = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "http://localhost:8000/api",
     headers: {
       Authorization: `Bearer ${token}`
     }
