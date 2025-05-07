@@ -54,6 +54,9 @@ connectDB();
 // API Routes
 // ------------------------
 
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 // User API Routes
 app.get("/api/users", userController.getAllUsers);
 app.get("/api/users/:id", userController.getUserById);
