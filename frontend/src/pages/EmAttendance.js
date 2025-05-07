@@ -70,6 +70,13 @@ const EmAttendance = () => {
     return attendanceCount;
   };
 
+  const filteredRecords = searchDate
+  ? records.filter((record) => {
+      const recordDate = format(parseISO(record.checkInTime), 'yyyy-MM-dd'); // local timezone
+      return recordDate === searchDate;
+    })
+  : records;
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -92,7 +99,7 @@ const EmAttendance = () => {
           {loading && (
             <div className="text-center py-4 text-gray-600">Loading records...</div>
           )}
-          
+
           {error && (
             <div className="text-center py-4 text-red-600 bg-red-100 rounded-lg">{error}</div>
           )}
@@ -108,8 +115,8 @@ const EmAttendance = () => {
                 </tr>
               </thead>
               <tbody>
-                {records.length > 0 ? (
-                  records.map((record) => (
+                {filteredRecords.length > 0 ? (
+                  filteredRecords.map((record) => (
                     <tr key={record._id} className="border-b hover:bg-gray-50 cursor-pointer" onClick={() => handleRowClick(record)}>
                       <td className="px-6 py-4">{record.name}</td>
                       <td className="px-6 py-4">{formatDate(record.checkInTime)}</td>
@@ -151,7 +158,7 @@ const EmAttendance = () => {
     </div>
   );
 
-  
+
 };
 
 export default EmAttendance;
