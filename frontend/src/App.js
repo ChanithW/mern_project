@@ -49,6 +49,7 @@ import ODMedit from "./pages/ODMedit.js";
 import ODinsert from "./pages/ODinsert.js";
 import ODMDashboard from "./pages/ODMDashboard.js";
 import ODMtracker from "./pages/RealTimeTracking.js";
+import VehicleTracker from "./pages/VehicleTracker.js";
 
 function App() {
   return (
@@ -101,7 +102,23 @@ function App() {
       <Route path="/ODMedit/:id" element={<ODMedit />} />
       <Route path="/ODinsert" element={<ODinsert />} />
       <Route path="/ODMDashboard" element={<ODMDashboard />} />
-      <Route path="/ODMtracker" element={<ODMtracker />} />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <Route path="/ODMtracker" element={<VehicleTracker />} />
        
     </Routes>
   </Router>

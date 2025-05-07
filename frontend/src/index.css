@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://unpkg.com/leaflet/dist/leaflet.css');
+
+
+
 @layer utilities {
   .bg-tea-estate {
     background-image: url('/images/shrilanka-tea-estates.jpg');
