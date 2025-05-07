@@ -1,17 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-//insert model
-const employee = require("../model/EMregistermodel");
-//insert ctrl
 const EMregisterCTRL = require("../controller/EMregisterCTRL");
 
-router.get("/",EMregisterCTRL.getEM);
-router.post("/",EMregisterCTRL.addEM);
-router.get("/:employeeId",EMregisterCTRL.getById);
-router.put("/:id",EMregisterCTRL.updateEM);
-router.delete("/:employeeId",EMregisterCTRL.deleteEM);
 
+router.get("/", EMregisterCTRL.getEM);// Get all employees
+router.post("/", EMregisterCTRL.addEM);// Add new employee
+router.get("/:id", EMregisterCTRL.getById);// Get single employee by MongoDB _id
+router.put("/:id", EMregisterCTRL.updateEM);// Update employee by MongoDB _id
+router.delete("/:id", EMregisterCTRL.deleteEM);// Delete employee by MongoDB _id
 
-//export
 module.exports = router;

@@ -38,11 +38,9 @@ const addEM = async (req, res, next) =>{
 
 //get bu id
 const getById = async (req, res, next) => {
-    const employeeId = req.params.employeeId?.trim();; // Access employeeId
-    console.log("Searching for employeeId:", employeeId);
-
+    const id = req.params.id;
     try {
-        const employee = await EMregistermodel.findOne({ employeeId });
+        const employee = await EMregistermodel.findById(id);
         if (!employee) {
             return res.status(404).json({ message: "Employee not found" });
         }
