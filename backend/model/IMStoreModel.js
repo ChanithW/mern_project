@@ -1,15 +1,28 @@
 const mongoose = require("mongoose");
+
 const Schema = mongoose.Schema;
 
 const IMStoreModel = new Schema({
-    Date:{
+    Date: {
         type: Date,
-        required: true, //validate
+        required: true,
+        unique: true // Ensure only one record per date
     },
-    totalAmount:{
+    totalAmount: {
         type: Number,
-        required: true, //Validate
+        required: true,
+        min: 0 // Ensure amount is not negative
+    },
+    notification: {
+        type: Boolean,
+        required: true,
+        default: false
     }
+}, {
+    timestamps: true // Add createdAt and updatedAt fields
 });
 
-module.exports = mongoose.model("IMStore", IMStoreModel)
+// Add index on Date field for faster queries
+IMStoreModel.index({ Date: 1 }, { unique: true });
+
+module.exports = mongoose.model("IMStore", IMStoreModel);

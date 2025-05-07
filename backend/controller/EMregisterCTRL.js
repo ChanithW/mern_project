@@ -19,12 +19,12 @@ const getEM = async (req, res, next) =>{
 //insert emp
 const addEM = async (req, res, next) =>{
 
-    const {empType,name,age,address,gender,phoneNumber} = req.body;
+    const {employeeId,empType,name,age,address,gender,phoneNumber} = req.body;
 
     let employee;
 
     try{
-        employee = new EMregistermodel({empType,name,age,address,gender,phoneNumber});
+        employee = new EMregistermodel({employeeId,empType,name,age,address,gender,phoneNumber});
         await employee.save();
     }catch(err){
         console.log(err);
@@ -38,22 +38,20 @@ const addEM = async (req, res, next) =>{
 
 //get bu id
 const getById = async (req, res, next) => {
-    const id = req.params.id;
+    const employeeId = req.params.employeeId?.trim();; // Access employeeId
+    console.log("Searching for employeeId:", employeeId);
 
-    let employee;
-
-    try{
-        employee = await EMregistermodel.findById(id);
-    }catch (err) {
+    try {
+        const employee = await EMregistermodel.findOne({ employeeId });
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+        return res.status(200).json({ employee });
+    } catch (err) {
         console.log(err);
+        return res.status(500).json({ message: "Server error fetching employee" });
     }
-    //not availble
-    if(!employee){
-        return res.status(404).json({message:"Employee not found"});
-    }
-    return res.status(200).json({employee});
-}
-
+};
 //update emp
 const updateEM = async (req, res, next) => {
     const id = req.params.id;

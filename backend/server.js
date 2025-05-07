@@ -2,6 +2,10 @@ const express = require('express');
 const connectDB = require('./database/db'); // Import DB connection
 const routerIM = require("./routes/IMStoreRouter");
 const routerdisptcher = require("./routes/IMDispatchRouter");
+require('dotenv').config();
+const EMregisterroutes = require("./routes/EMregisterroutes");
+const teaPluckingRoutes = require("./routes/teaPluckingRoutes");
+const attendanceRoutes = require("./routes/AttendenceRouts");
 const routeremail = require("./routes/emailRoutes");
 require('dotenv').config(); // Load environment variables
 const EMregisterroutes = require("./routes/EMregisterroutes");
@@ -9,6 +13,7 @@ const teaPluckingRoutes = require("./routes/teaPluckingRoutes");
 const attendanceRoutes = require("./routes/AttendenceRouts");
 const router = require("./Routes/ODMdrive");
 const PORT = process.env.PORT || 5000;
+
 
 const http = require("http");
 const socketIo = require("socket.io");
@@ -124,6 +129,9 @@ app.use("/tdispatch", routerdisptcher);
 app.use("/api/email", routeremail);
 
 //chim-schedules
+//app.use(smsRoutes);
+
+// Field Management Schedules
 app.post("/api/createschedule", fdmController.createSchedule);
 app.get("/api/getschedules", fdmController.getSchedules);
 app.put("/api/updateschedule/:id", fdmController.updateSchedule);
@@ -131,6 +139,7 @@ app.delete("/api/schedules/:id", fdmController.deleteSchedule);
 app.get("/api/schedules/:id", fdmController.getScheduleById);
 
 //chim-records
+// Field Management Daily Records
 app.post("/api/createdrecord", fdmdController.createRecord);
 app.get("/api/getrecords", fdmdController.getRecords);
 app.get("/api/getrecord/:id", fdmdController.getRecordById);
@@ -138,6 +147,7 @@ app.put("/api/updaterecord/:id", fdmdController.updateRecord);
 app.delete("/api/deleterecord/:id", fdmdController.deleteRecord);
 
 //finance management - chanith
+// Finance Management
 app.get("/api/finance", financeController.getAllFinanceRecords);
 app.get("/api/finance/download", financeController.downloadReport);
 app.get("/api/finance/:id", financeController.getFinanceRecordById);

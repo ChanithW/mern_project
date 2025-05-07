@@ -6,6 +6,9 @@ const tStock = require("../model/IMStoreModel");
 //Insert controller
 const IMStoreController = require("../controller/IMStoreController");
 
+
+router.get("/notification",IMStoreController.getStoresByNotification);
+
 router.get("/",IMStoreController.getStore);
 router.post("/",IMStoreController.addStore);
 router.get("/:id",IMStoreController.getById);
