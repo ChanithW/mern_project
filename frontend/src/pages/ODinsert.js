@@ -6,7 +6,6 @@ import bgImage from '../assets/images/bg.jpg';
 
 export default function ODinsert() {
   const [formData, setFormData] = useState({
-    DeliveryID: "",
     TripDate: "",
     DepartureTime: "",
     VehicleNumber: "",
@@ -20,7 +19,7 @@ export default function ODinsert() {
     FuelConsumption: ""
   });
 
-  const [errorMessages, setErrorMessages] = useState({});  // for validation eror
+  const [errorMessages, setErrorMessages] = useState({});  // for validation errors
   const navigate = useNavigate();
 
   // Handle form data changes
@@ -55,9 +54,9 @@ export default function ODinsert() {
 
     // Validation on VehicleNumber (e.g., VE9999 or ASD123)
     const vehicleRegex = /^[A-Z]{2,3}\d{4}$/;
-      if (formData.VehicleNumber && !vehicleRegex.test(formData.VehicleNumber)) {
-        errors.VehicleNumber = "Please enter a valid Vehicle Number (e.g., VE9999 or ASD1234)";
-}
+    if (formData.VehicleNumber && !vehicleRegex.test(formData.VehicleNumber)) {
+      errors.VehicleNumber = "Please enter a valid Vehicle Number (e.g., VE9999 or ASD1234)";
+    }
 
     // Validation on TraveledDistance (should be a number)
     if (formData.TraveledDistance && (isNaN(formData.TraveledDistance) || parseFloat(formData.TraveledDistance) <= 0)) {
@@ -73,7 +72,7 @@ export default function ODinsert() {
     return Object.keys(errors).length === 0;
   };
 
-  // control form submission
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -91,7 +90,6 @@ export default function ODinsert() {
 
       // Reset the form
       setFormData({
-        DeliveryID: "",
         TripDate: "",
         DepartureTime: "",
         VehicleNumber: "",
@@ -115,6 +113,7 @@ export default function ODinsert() {
       <Card className="w-1/2 p-4 bg-white bg-opacity-70">
         <h2 className="text-3xl font-bold text-center mb-4">Add Delivery Record</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Remove DeliveryID field */}
           {Object.keys(formData).map((key) => (
             <div key={key}>
               <Label htmlFor={key} value={key} />
@@ -134,7 +133,6 @@ export default function ODinsert() {
             className="bg-gray-500 text-white w-full mt-4"
             type="button"
             onClick={() => setFormData({
-              DeliveryID: "",
               TripDate: "",
               DepartureTime: "",
               VehicleNumber: "",
