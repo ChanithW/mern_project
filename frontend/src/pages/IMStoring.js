@@ -16,7 +16,7 @@ export default function IMStoring() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/tstock");
+        const response = await axios.get("http://localhost:8000/tstock");
         setTStock(response.data.tStock);
       } catch (err) {
         console.error("Error fetching data", err);
@@ -46,10 +46,10 @@ export default function IMStoring() {
   }
 
     try {
-      await axios.post("http://localhost:5000/tstock", formData);
+      await axios.post("http://localhost:8000/tstock", formData);
       setFormData({ Date: "", totalAmount: "" });
 
-      const response = await axios.get("http://localhost:5000/tstock");
+      const response = await axios.get("http://localhost:8000/tstock");
       setTStock(response.data.tStock);
     } catch (err) {
       console.error("Failed to add stock.");
@@ -60,8 +60,8 @@ export default function IMStoring() {
     const isConfirmed = window.confirm("Are you sure you want to delete this record?");
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:5000/tstock/${id}`);
-        const response = await axios.get("http://localhost:5000/tstock");
+        await axios.delete(`http://localhost:8000/tstock/${id}`);
+        const response = await axios.get("http://localhost:8000/tstock");
         setTStock(response.data.tStock);
       } catch (err) {
         console.error("Error deleting stock", err);

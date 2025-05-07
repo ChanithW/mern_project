@@ -103,6 +103,8 @@ function FDMfScheduleEdit() {
               onChange={handleChange}
               required
               className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+              min={new Date().toISOString().split("T")[0]}
+              max={new Date().toISOString().split("T")[0]}
             />
           </div>
 
@@ -117,6 +119,7 @@ function FDMfScheduleEdit() {
               onChange={handleChange}
               required
               className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+              min={new Date().toISOString().split("T")[0]}
             />
           </div>
 
@@ -149,6 +152,7 @@ function FDMfScheduleEdit() {
               onChange={handleChange}
               required
               className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+              min="1" step="1"
             />
           </div>
 
@@ -161,6 +165,7 @@ function FDMfScheduleEdit() {
               onChange={handleChange}
               required
               className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+              min="1" step="1"
             />
           </div>
 
@@ -173,6 +178,7 @@ function FDMfScheduleEdit() {
               onChange={handleChange}
               required
               className="w-full p-2 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+              min="1" step="1"
             />
           </div>
 

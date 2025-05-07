@@ -17,7 +17,7 @@ function FDM_Login() {
         // Redirect to admin dashboard (to be implemented)
         navigate("/");
     
-        if (username === "chim" && password === "chim123") {
+        if (username === "supervisor" && password === "fdm@123") {
             navigate("/fdm-dashboard"); // Redirect to the admin dashboard
         } else {
             alert("Invalid username or password");

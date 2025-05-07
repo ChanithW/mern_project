@@ -46,13 +46,14 @@ function FDMdRecordsRead() {
     );
   });
 
-  // Convert data to CSV
+  // Convert filtered data to CSV and download
   const downloadReport = () => {
-    const headers = ["Found Date", "Disease Name", "Spread Status", "Treatments", "Notes", "Status"];
+    const headers = ["Found Date", "Disease Name","Spread Status", "Spread Area","Treatments", "Notes", "Status"];
     const rows = filteredData.map((row) => [
       new Date(row.foundDate).toISOString().split("T")[0],
       row.diseaseName,
       row.spreadStatus,
+      row.spreadArea,
       row.treatments,
       row.notes,
       row.status,
@@ -60,15 +61,25 @@ function FDMdRecordsRead() {
 
     let csvContent = "data:text/csv;charset=utf-8,";
     csvContent += headers.join(",") + "\n";
+
     rows.forEach((row) => {
-      csvContent += row.join(",") + "\n";
+      const escapedRow = row.map((value) =>
+        `"${(value || "").toString().replace(/"/g, '""')}"`
+      );
+      csvContent += escapedRow.join(",") + "\n";
     });
 
-    // Create a downloadable link and trigger it
     const link = document.createElement("a");
     link.href = encodeURI(csvContent);
     link.download = "disease_records_report.csv";
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+  };
+
+  // Notify agricultural technician
+  const handleNotifyAgriculturalTechnician = () => {
+    navigate('/fdm-femail');
   };
 
   return (
@@ -101,13 +112,17 @@ function FDMdRecordsRead() {
                 ➕ Add New Record
               </button>
               <button
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
                 onClick={downloadReport}
+                disabled={filteredData.length === 0} // Disable if no data to download
               >
                 📥 Download Report
               </button>
-              <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800">
-              ✉️ Notify Agricultural Technician
+              <button
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
+                onClick={handleNotifyAgriculturalTechnician}
+              >
+                ✉️ Notify Agricultural Technician
               </button>
             </div>
           </div>
@@ -120,7 +135,8 @@ function FDMdRecordsRead() {
                   <th className="p-2 border border-green-400">Found Date</th>
                   <th className="p-2 border border-green-400">Disease Name</th>
                   <th className="p-2 border border-green-400">Spread Status</th>
-                  <th className="p-2 border border-green-400">Treatments</th>
+                  <th className="p-2 border border-green-400">Spread Area</th>
+                  <th className="p-2 border border-green-400">Treatments (ROP NO)</th>
                   <th className="p-2 border border-green-400">Notes</th>
                   <th className="p-2 border border-green-400">Status</th>
                   <th className="p-2 border border-green-400">Actions</th>
@@ -134,6 +150,7 @@ function FDMdRecordsRead() {
                     </td>
                     <td className="p-2 border border-green-400">{row.diseaseName}</td>
                     <td className="p-2 border border-green-400">{row.spreadStatus}</td>
+                    <td className="p-2 border border-green-400">{row.spreadArea}</td>
                     <td className="p-2 border border-green-400">{row.treatments}</td>
                     <td className="p-2 border border-green-400">{row.notes}</td>
                     <td className="p-2 border border-green-400">{row.status}</td>
@@ -153,6 +170,13 @@ function FDMdRecordsRead() {
                     </td>
                   </tr>
                 ))}
+                {filteredData.length === 0 && (
+                  <tr>
+                    <td colSpan="7" className="text-center p-4">
+                      No records found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -163,3 +187,4 @@ function FDMdRecordsRead() {
 }
 
 export default FDMdRecordsRead;
+

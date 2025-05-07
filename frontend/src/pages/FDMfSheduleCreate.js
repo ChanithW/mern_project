@@ -13,6 +13,7 @@ function FDMfSheduleCreate() {
     mop: "",
     area: "",
     status: "",
+    
   });
   const navigate = useNavigate();
 
@@ -41,6 +42,7 @@ function FDMfSheduleCreate() {
         mop: "",
         area: "",
         status: "",
+        
       });
       navigate(`/fdm-scheduleRead`);
     } catch (error) {
@@ -60,13 +62,13 @@ function FDMfSheduleCreate() {
           {/* Date Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Date</label>
-            <input type="date" name="date" value={formData.date} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" />
+            <input type="date" name="date" value={formData.date} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" min={new Date().toISOString().split("T")[0]} max={new Date().toISOString().split("T")[0]}/>
           </div>
 
           {/* Due Date */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Due Date</label>
-            <input type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" />
+            <input type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" min={new Date().toISOString().split("T")[0]}/>
           </div>
 
           {/* Fertilizer Mixture */}
@@ -83,19 +85,19 @@ function FDMfSheduleCreate() {
           {/* Urea Parts */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Urea Parts</label>
-            <input type="number" name="urea" value={formData.urea} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" />
+            <input type="number" name="urea" value={formData.urea} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" min="1" step="1"/>
           </div>
 
           {/* ERP Parts */}
           <div>
             <label className="block text-sm font-medium text-gray-700">ERP Parts</label>
-            <input type="number" name="erp" value={formData.erp} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" />
+            <input type="number" name="erp" value={formData.erp} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" min="1" step="1" />
           </div>
 
           {/* MOP Parts */}
           <div>
             <label className="block text-sm font-medium text-gray-700">MOP Parts</label>
-            <input type="number" name="mop" value={formData.mop} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" />
+            <input type="number" name="mop" value={formData.mop} onChange={handleChange} required className="w-full p-2 border border-green-400 rounded-lg" min="1" step="1" />
           </div>
 
           {/* Area */}
@@ -114,6 +116,8 @@ function FDMfSheduleCreate() {
               ))}
             </select>
           </div>
+
+           
 
           {/* Submit Button */}
           <button type="submit" className="w-full p-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Add Record</button>

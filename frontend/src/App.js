@@ -17,9 +17,13 @@ import FDMfScheduleCreate from "./pages/FDMfSheduleCreate.js";
 import FDMfScheduleEdit from "./pages/FDMfScheduleEdit.js";
 import FDMdRecordsCreate from "./pages/FDMdRecordsCreate.js";
 import FDMdRecordsEdit from "./pages/FDMdRecordsEdit.js";
+import FDMfertilizerGenerator from "./pages/FDMfertilizerGenerator.js";
+import FDMdDiseaseRemedies from "./pages/FDMdDiseaseRemedies.js";
+
 import Aboutus from "./pages/Aboutus.js"
 import FAQ from "./pages/FAQ.js";
 import FDMfemail from "./pages/FDMfemail"
+
 import AddUsers from "./pages/AddUsers";
 import EditUser from "./pages/EditUser";
 import FinanceLogin from "./pages/FMLogin.js";
@@ -65,6 +69,7 @@ function App() {
       <Route path="/IMDashboard" element={<IMDashboard/>} /*Amath*/ />
       <Route path="/IMStoringEdit/:id" element={<IMStoringEdit/>} /*Amath*/ />
       <Route path="/IMDispatchEdit/:id" element={<IMDispatchEdit/>} /*Amath*/ />
+
       <Route path="/fdm-login" element={<FDMLogin />} />
       <Route path="/fdm-dashboard" element={<FDMdashBoard />} />
       <Route path="/fdm-scheduleRead" element={<FDMscheduleRead />} />
@@ -73,9 +78,15 @@ function App() {
       <Route path="/fdm-fScheduleEdit/:id" element={<FDMfScheduleEdit />} />
       <Route path="/fdm-dRecordsCreate" element={<FDMdRecordsCreate />} />
       <Route path="/fdm-dRecordsEdit/:id" element={<FDMdRecordsEdit/>} />
+      <Route path="/fdm-fertilizerGenerator" element={<FDMfertilizerGenerator/>} />
+      <Route path="/fdm-dDiseaseRemedies" element={<FDMdDiseaseRemedies/>} />
+
+      
+      <Route path="/fdm-femail" element={<FDMfemail/>} />
+
       <Route path="/about-us" element={<Aboutus/>} />
       <Route path="/faq" element={<FAQ/>} />
-      <Route path="/fdm-femail" element={<FDMfemail/>} />
+    
 
       <Route path="/add-user" element={<AddUsers />} />
       <Route path="/edit-user/:id" element={<EditUser />} />

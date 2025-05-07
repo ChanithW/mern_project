@@ -8,7 +8,9 @@ const FDMfScheduleSchema = new mongoose.Schema({
   erp: { type: Number, required: true },
   mop: { type: Number, required: true },
   area: { type: String, required: true },
-  status: { type: String, required: true, enum: ["Pending", "Completed", "In Progress"] }
+  status: { type: String, required: true, enum: ["Pending", "Completed", "In Progress"] },
+  
+
 });
 
 const FDMfSchedule = mongoose.model("FDMfSchedule", FDMfScheduleSchema);

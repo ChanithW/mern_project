@@ -25,10 +25,11 @@ const navigate = useNavigate();
           <button className="w-full px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-md" href="/fdm-drecordsRead" onClick={() => navigate("/fdm-drecordsRead")}>
             Disease Records
           </button>
-          <button className="w-full px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-md">
+          <button className="w-full px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-md" onClick={() => navigate("/fdm-fertilizerGenerator")}>
             Annual Fertilization Schedule Calculator
           </button>
-          <button className="w-full px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-md">
+      
+          <button className="w-full px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-md" onClick={() => navigate("/fdm-dDiseaseRemedies")}>
             Disease & Treatments
           </button>
         </div>
