@@ -7,7 +7,7 @@ const DailyTeaTable = () => {
   useEffect(() => {
     const fetchDailyTeaRecords = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/dailyTea");
+        const response = await axios.get("http://localhost:5000/dailyTea");
         setDailyTeaRecords(response.data.dailyTeaRecords);
       } catch (error) {
         console.error("Error fetching daily tea records:", error);

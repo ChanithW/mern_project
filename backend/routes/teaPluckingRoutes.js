@@ -32,5 +32,4 @@ router.get("/employee/:employeeId", teaPluckingController.getRecordsByEmployeeId
 router.get("/record/:id", teaPluckingController.getRecordById);
 
 
-
 module.exports = router;

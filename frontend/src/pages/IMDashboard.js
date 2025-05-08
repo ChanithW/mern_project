@@ -15,7 +15,7 @@ export default function IMDashboard() {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/tstock");
+        const response = await axios.get("http://localhost:5000/tstock");
         setTStock(response.data.tStock);
       } catch (err) {
         console.error("Error fetching stock data", err);
@@ -24,7 +24,7 @@ export default function IMDashboard() {
 
     const fetchDispatchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/tdispatch");
+        const response = await axios.get("http://localhost:5000/tdispatch");
         setTDispatch(response.data.tDispatch);
       } catch (err) {
         console.error("Error fetching dispatch data", err);

@@ -59,7 +59,7 @@ function EMregister() {
     const dataWithId = { ...formData, employeeId };
 
     try {
-      const response = await axios.post("http://localhost:8000/EMployee", dataWithId);
+      const response = await axios.post("http://localhost:5000/EMployee", dataWithId);
       
       // Store the complete response data and ensure we have the employee ID
       const savedEmployee = response.data;

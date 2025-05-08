@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "flowbite-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa"; // Import back arrow icon
 
 const FMUpdate = () => {
   const { id } = useParams(); // Get ID
@@ -18,7 +19,7 @@ const FMUpdate = () => {
   // Fetch existing data
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/finance/${id}`)
+      .get(`http://localhost:5000/api/finance/${id}`)
       .then((res) => setFormData(res.data))
       .catch((err) => console.error("Error fetching record:", err));
   }, [id]);
@@ -46,7 +47,7 @@ const FMUpdate = () => {
     }
 
     try {
-      await axios.put(`http://localhost:8000/api/finance/${id}`, data, {
+      await axios.put(`http://localhost:5000/api/finance/${id}`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Record updated successfully!");
@@ -60,8 +61,16 @@ const FMUpdate = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       <div className="w-full p-6 bg-green-100 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2">
-          <h2 className="text-2xl font-bold mb-4">Update Finance Record</h2>
+        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 border-2 border-green-500 relative">
+          {/* Back Button */}
+          <button 
+            onClick={() => navigate(-1)} 
+            className="absolute top-4 left-4 text-gray-600 hover:text-gray-800"
+          >
+            <FaArrowLeft className="text-xl" />
+          </button>
+          
+          <h2 className="text-2xl font-bold mb-4 text-center">Update Finance Record</h2>
           <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
             <div>
               <label className="block font-semibold">Date</label>
@@ -115,7 +124,7 @@ const FMUpdate = () => {
               <label className="block font-semibold">Current Image</label>
               {formData.image ? (
                 <img
-                  src={`http://localhost:8000${formData.image}`}
+                  src={`http://localhost:5000${formData.image}`}
                   alt="Current Transaction"
                   className="w-32 h-32 object-cover mb-2"
                 />

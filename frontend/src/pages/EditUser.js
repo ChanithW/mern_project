@@ -20,7 +20,7 @@ const EditUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/users/${id}`);
+        const response = await fetch(`http://localhost:5000/api/users/${id}`);
         const data = await response.json();
         if (response.ok) {
           setFormData(data);
@@ -42,7 +42,7 @@ const EditUser = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/api/users/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/users/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

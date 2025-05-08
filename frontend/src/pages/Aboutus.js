@@ -75,13 +75,7 @@ function AboutUs() {
       >
         <h2 className="text-3xl font-bold text-black mb-4">Experience the Taste of Excellence</h2>
         
-        <motion.a 
-          href="/shop"
-          className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-semibold hover:bg-green-700 transition mt-6 inline-block"
-          whileHover={{ scale: 1.1 }}
-        >
-          Image Gallery
-        </motion.a>
+        
       </motion.div>
 
     </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa"; // Import back arrow icon
 
 const FMCreate = () => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ const FMCreate = () => {
     }
   
     try {
-      await axios.post("http://localhost:8000/api/finance", data, {
+      await axios.post("http://localhost:5000/api/finance", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("Record added successfully!");
@@ -48,7 +49,15 @@ const FMCreate = () => {
   return (
     <div className="p-6 bg-green-100 min-h-screen">
       <div className="w-full p-6 bg-green-100 flex items-center justify-center">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 border-2 border-green-500">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-1/2 border-2 border-green-500 relative">
+          {/* Back Button */}
+          <button 
+            onClick={() => navigate(-1)} 
+            className="absolute top-4 left-4 text-gray-600 hover:text-gray-800"
+          >
+            <FaArrowLeft className="text-xl" />
+          </button>
+          
           <h2 className="text-2xl font-bold mb-4 text-center">Add New Finance Record</h2>
           <form onSubmit={handleSubmit} className="space-y-4" encType="multipart/form-data">
             <div>

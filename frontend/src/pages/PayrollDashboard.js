@@ -4,6 +4,7 @@ import { Button, Modal, Label, TextInput, Select } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/header";
 import AuthContext from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 // Debounce utility
 const debounce = (func, delay) => {
@@ -24,35 +25,64 @@ const PayrollDashboard = () => {
   const [dailyWage, setDailyWage] = useState(0);
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+  const [employeeOptions, setEmployeeOptions] = useState([]);
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Axios instance with auth header - memoized to prevent recreation on every render
-  const authAxios = useMemo(() => axios.create({
-    baseURL: "http://localhost:5000/api",
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  }), [token]);
+  // Axios instance with auth header
+  const authAxios = useMemo(() => {
+    const instance = axios.create({
+      baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    
+    instance.interceptors.response.use(
+      response => response,
+      error => {
+        if (error.response?.status === 401) {
+          navigate("/finance-login");
+        }
+        return Promise.reject(error);
+      }
+    );
+    
+    return instance;
+  }, [token, navigate]);
 
   const fetchPayrollData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await authAxios.get("/payroll");
-      setRecords(response.data);
-      setError(null);
+      if (response.data && Array.isArray(response.data)) {
+        setRecords(response.data);
+        setError(null);
+      } else {
+        throw new Error("Invalid data format received");
+      }
     } catch (err) {
       console.error("Error fetching payroll data:", err);
-      setError("Failed to fetch payroll data. Please try again.");
-      if (err.response?.status === 401) {
-        navigate("/finance-login");
-      }
+      setError(err.response?.data?.message || "Failed to fetch payroll data. Please try again.");
+      toast.error(err.response?.data?.message || "Failed to fetch payroll data");
     } finally {
       setLoading(false);
     }
-  }, [authAxios, navigate]);
+  }, [authAxios]);
+
+  const fetchEmployeeOptions = useCallback(async () => {
+    try {
+      const response = await authAxios.get("/tea-plucking/employees");
+      if (response.data?.employees && Array.isArray(response.data.employees)) {
+        setEmployeeOptions(response.data.employees);
+      }
+    } catch (err) {
+      console.error("Error fetching employee options:", err);
+      toast.error("Failed to load employee list");
+    }
+  }, [authAxios]);
 
   const fetchEmployeeData = async (empId) => {
     if (!empId || !selectedDate || empId === "") return;
@@ -61,34 +91,36 @@ const PayrollDashboard = () => {
       const response = await authAxios.get(`/employee/payment/${empId}`, {
         params: { date: selectedDate }
       });
-      setEmployeeName(response.data.employeeName || "");
-      setDailyWage(response.data.dailyWage || 0);
-
-      let bonus = 0;
-      if (performanceLevel === "high") bonus = 3000;
-      else if (performanceLevel === "moderate") bonus = 1000;
-      setPaymentAmount((response.data.dailyWage || 0) + bonus);
+      
+      if (response.data) {
+        setEmployeeName(response.data.employeeName || "");
+        setDailyWage(response.data.dailyWage || 0);
+        
+        let bonus = 0;
+        if (performanceLevel === "high") bonus = 3000;
+        else if (performanceLevel === "moderate") bonus = 1000;
+        setPaymentAmount((response.data.dailyWage || 0) + bonus);
+      }
     } catch (err) {
       console.error("Error fetching employee data:", err);
-      alert("Failed to fetch employee data. Please check the Employee ID and date.");
+      toast.error("Failed to fetch employee data");
       setEmployeeName("");
       setDailyWage(0);
       setPaymentAmount(0);
     }
   };
 
-  // Debounced fetch for employee data
   const debouncedFetchEmployeeData = useRef(debounce(fetchEmployeeData, 500)).current;
 
   useEffect(() => {
     if (token) {
       fetchPayrollData();
+      fetchEmployeeOptions();
     } else {
       navigate("/finance-login");
     }
-  }, [token, fetchPayrollData, navigate]);
+  }, [token, fetchPayrollData, fetchEmployeeOptions, navigate]);
 
-  // Separate effect to fetch employee data when employeeId or selectedDate changes
   useEffect(() => {
     if (employeeId) {
       debouncedFetchEmployeeData(employeeId);
@@ -97,99 +129,87 @@ const PayrollDashboard = () => {
       setDailyWage(0);
       setPaymentAmount(0);
     }
-  }, [employeeId, selectedDate, debouncedFetchEmployeeData]);
-
-  const handleEmployeeIdChange = (e) => {
-    setEmployeeId(e.target.value);
-  };
-
-  const handlePerformanceChange = (e) => {
-    const level = e.target.value;
-    setPerformanceLevel(level);
-
-    let bonus = 0;
-    if (level === "high") bonus = 3000;
-    else if (level === "moderate") bonus = 1000;
-    setPaymentAmount(dailyWage + bonus);
-  };
-
-  const handleDateChange = (e) => {
-    setSelectedDate(e.target.value);
-  };
+  }, [employeeId, selectedDate, debouncedFetchEmployeeData, performanceLevel]);
 
   const handleAddPayroll = async () => {
     try {
+      if (!employeeId || !employeeName || !paymentAmount) {
+        toast.error("Please fill all required fields");
+        return;
+      }
+
       await authAxios.post("/payroll/add", {
         employeeId,
         employeeName,
         performanceLevel,
         dailyWage,
         paymentAmount,
-        date: new Date().toISOString().split("T")[0],
+        date: selectedDate,
       });
 
+      toast.success("Payroll record added successfully");
       fetchPayrollData();
       setShowModal(false);
-      setEmployeeId("");
-      setEmployeeName("");
-      setPerformanceLevel("low");
-      setDailyWage(0);
-      setPaymentAmount(0);
-      setSelectedDate(new Date().toISOString().split("T")[0]);
+      resetForm();
     } catch (err) {
       console.error("Error adding payroll record:", err);
-      alert("Failed to add payroll record. Please try again.");
-      if (err.response?.status === 401) {
-        navigate("/finance-login");
-      }
+      toast.error(err.response?.data?.message || "Failed to add payroll record");
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete?")) {
+    if (window.confirm("Are you sure you want to delete this record?")) {
       try {
         await authAxios.delete(`/payroll/${id}`);
+        toast.success("Record deleted successfully");
         fetchPayrollData();
       } catch (err) {
         console.error("Error deleting payroll record:", err);
-        alert("Failed to delete payroll record. Please try again.");
-        if (err.response?.status === 401) {
-          navigate("/finance-login");
-        }
+        toast.error("Failed to delete record");
       }
     }
   };
 
   const handleDownload = async () => {
     try {
-      const response = await authAxios.get(`/payroll/download?search=${encodeURIComponent(search)}`, {
-        responseType: "blob",
-      });
+      const response = await authAxios.get(
+        `/payroll/download?search=${encodeURIComponent(search)}`,
+        { responseType: "blob" }
+      );
 
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+      const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "Payroll_Report.pdf");
+      link.setAttribute("download", `Payroll_Report_${new Date().toISOString().split('T')[0]}.pdf`);
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      link.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Error downloading payroll report:", err);
-      alert("Failed to download payroll report. Please try again.");
-      if (err.response?.status === 401) {
-        navigate("/finance-login");
-      }
+      console.error("Error downloading report:", err);
+      toast.error("Failed to download report");
     }
   };
 
-  const filteredRecords = records.filter((record) => {
-    const searchLower = search.toLowerCase();
-    const nameMatch = record.employeeName?.toLowerCase().includes(searchLower);
-    const idMatch = record.employeeId?.toString().includes(search);
-    const dateMatch = record.date?.toLowerCase().includes(searchLower);
-    return nameMatch || idMatch || dateMatch;
-  });
+  const resetForm = () => {
+    setEmployeeId("");
+    setEmployeeName("");
+    setPerformanceLevel("low");
+    setDailyWage(0);
+    setPaymentAmount(0);
+    setSelectedDate(new Date().toISOString().split("T")[0]);
+  };
+
+  const filteredRecords = useMemo(() => {
+    return records.filter(record => {
+      const searchLower = search.toLowerCase();
+      return (
+        record.employeeName?.toLowerCase().includes(searchLower) ||
+        record.employeeId?.toString().includes(search) ||
+        record.date?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [records, search]);
 
   if (loading) {
     return (
@@ -207,7 +227,12 @@ const PayrollDashboard = () => {
       <div className="min-h-screen flex flex-col">
         <Header />
         <div className="flex items-center justify-center h-screen">
-          <div className="text-xl font-semibold text-red-600">{error}</div>
+          <div className="text-xl font-semibold text-red-600">
+            {error}
+            <Button onClick={fetchPayrollData} className="mt-4">
+              Retry
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -216,44 +241,47 @@ const PayrollDashboard = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-
       <div className="p-6 bg-green-100 min-h-screen">
         <div className="max-w-8xl mx-auto bg-white p-6 shadow-lg rounded-lg border-2 border-green-500">
-          <div>
-            <h2 className="mt-3 text-3xl font-bold">Payroll Dashboard</h2>
-            <br />
-            <div className="mb-4 flex justify-between items-center">
-              <div className="flex space-x-2">
-                <input
-                  type="text"
-                  placeholder="Search payroll records..."
-                  className="p-2 border border-green-400 rounded-lg"
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <Button
-                  className="bg-gray-600 text-white px-4 py-2"
-                  onClick={handleDownload}
-                >
-                  📥 Download Report
-                </Button>
-              </div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-3xl font-bold">Payroll Dashboard</h2>
+            <div className="flex space-x-2">
               <Button
-                className="bg-green-600 text-white px-4 py-2 hover:bg-green-700"
+                color="success"
                 onClick={() => setShowModal(true)}
               >
                 ➕ Add Payroll
               </Button>
             </div>
-            <table className="w-full border-collapse border border-black">
-              <thead>
-                <tr className="bg-green-600 text-white">
-                  <th className="border border-black p-2 text-left">Employee ID</th>
-                  <th className="border border-black p-2">Employee Name</th>
-                  <th className="border border-black p-2">Performance Level</th>
-                  <th className="border border-black p-2">Daily Wage (LKR)</th>
-                  <th className="border border-black p-2">Payment Amount (LKR)</th>
-                  <th className="border border-black p-2">Date</th>
-                  <th className="border border-black p-2">Actions</th>
+          </div>
+
+          <div className="mb-6 flex justify-between items-center">
+            <TextInput
+              type="text"
+              placeholder="Search payroll records..."
+              className="w-64"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
+            <Button
+              color="gray"
+              onClick={handleDownload}
+            >
+              📥 Download Report
+            </Button>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-gray-300">
+              <thead className="bg-green-600 text-white">
+                <tr>
+                  <th className="border border-gray-300 p-3 text-left">Employee ID</th>
+                  <th className="border border-gray-300 p-3">Employee Name</th>
+                  <th className="border border-gray-300 p-3">Performance</th>
+                  <th className="border border-gray-300 p-3">Daily Wage (LKR)</th>
+                  <th className="border border-gray-300 p-3">Payment (LKR)</th>
+                  <th className="border border-gray-300 p-3">Date</th>
+                  <th className="border border-gray-300 p-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -261,17 +289,18 @@ const PayrollDashboard = () => {
                   filteredRecords.map((record) => (
                     <tr
                       key={record._id}
-                      className="text-center border border-black hover:bg-gray-100"
+                      className="hover:bg-gray-50 even:bg-gray-100"
                     >
-                      <td className="border border-black p-2 text-left">{record.employeeId}</td>
-                      <td className="border border-black p-2">{record.employeeName}</td>
-                      <td className="border border-black p-2 capitalize">{record.performanceLevel}</td>
-                      <td className="border border-black p-2">{record.dailyWage?.toFixed(2)}</td>
-                      <td className="border border-black p-2">{record.paymentAmount?.toFixed(2)}</td>
-                      <td className="border border-black p-2">{record.date}</td>
-                      <td className="border border-black p-2">
+                      <td className="border border-gray-300 p-3">{record.employeeId}</td>
+                      <td className="border border-gray-300 p-3">{record.employeeName}</td>
+                      <td className="border border-gray-300 p-3 capitalize">{record.performanceLevel}</td>
+                      <td className="border border-gray-300 p-3 text-right">{record.dailyWage?.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-3 text-right">{record.paymentAmount?.toFixed(2)}</td>
+                      <td className="border border-gray-300 p-3">{new Date(record.date).toLocaleDateString()}</td>
+                      <td className="border border-gray-300 p-3">
                         <Button
-                          className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 mr-2"
+                          color="failure"
+                          size="xs"
                           onClick={() => handleDelete(record._id)}
                         >
                           Delete
@@ -280,7 +309,7 @@ const PayrollDashboard = () => {
                     </tr>
                   ))
                 ) : (
-                  <tr className="border border-black">
+                  <tr>
                     <td colSpan="7" className="text-center p-4 text-gray-500">
                       No payroll records found
                     </td>
@@ -291,80 +320,85 @@ const PayrollDashboard = () => {
           </div>
         </div>
 
-        <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal show={showModal} onClose={() => setShowModal(false)} size="md">
           <Modal.Header>Add New Payroll Record</Modal.Header>
           <Modal.Body>
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div>
-                <Label htmlFor="date">Select Date for Tea Plucking Record</Label>
+                <Label htmlFor="date">Record Date</Label>
                 <TextInput
                   id="date"
                   type="date"
                   value={selectedDate}
-                  onChange={handleDateChange}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  required
                 />
               </div>
+              
               <div>
-                <Label htmlFor="employeeId">Employee ID</Label>
-                <TextInput
+                <Label htmlFor="employeeId">Employee</Label>
+                <Select
                   id="employeeId"
                   value={employeeId}
-                  onChange={handleEmployeeIdChange}
-                  placeholder="Enter Employee ID"
-                />
+                  onChange={(e) => setEmployeeId(e.target.value)}
+                  required
+                >
+                  <option value="">Select employee</option>
+                  {employeeOptions.map((employee) => (
+                    <option key={employee._id} value={employee._id}>
+                      {employee._id} - {employee.name}
+                    </option>
+                  ))}
+                </Select>
               </div>
+              
               <div>
                 <Label htmlFor="employeeName">Employee Name</Label>
                 <TextInput
                   id="employeeName"
                   value={employeeName}
                   readOnly
-                  placeholder="Will be fetched"
                 />
               </div>
+              
               <div>
                 <Label htmlFor="dailyWage">Daily Wage (LKR)</Label>
                 <TextInput
                   id="dailyWage"
                   value={dailyWage.toFixed(2)}
                   readOnly
-                  placeholder="Will be fetched"
                 />
               </div>
+              
               <div>
                 <Label htmlFor="performanceLevel">Performance Level</Label>
                 <Select
                   id="performanceLevel"
                   value={performanceLevel}
-                  onChange={handlePerformanceChange}
+                  onChange={(e) => setPerformanceLevel(e.target.value)}
                 >
                   <option value="low">Low</option>
                   <option value="moderate">Moderate</option>
                   <option value="high">High</option>
                 </Select>
               </div>
+              
               <div>
-                <Label>Payment Amount (LKR)</Label>
+                <Label htmlFor="paymentAmount">Payment Amount (LKR)</Label>
                 <TextInput
+                  id="paymentAmount"
                   value={paymentAmount.toFixed(2)}
                   readOnly
-                  placeholder="Will be calculated"
                 />
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              className="bg-green-600 text-white hover:bg-green-700"
-              onClick={handleAddPayroll}
-            >
-              Add Record
-            </Button>
-            <Button
-              className="bg-gray-500 text-white hover:bg-gray-600"
-              onClick={() => setShowModal(false)}
-            >
+            <Button color="gray" onClick={() => setShowModal(false)}>
               Cancel
+            </Button>
+            <Button color="success" onClick={handleAddPayroll}>
+              Add Record
             </Button>
           </Modal.Footer>
         </Modal>

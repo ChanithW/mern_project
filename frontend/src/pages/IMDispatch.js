@@ -23,7 +23,7 @@ const [status, setStatus] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/tdispatch");
+        const response = await axios.get("http://localhost:5000/tdispatch");
         setTDispatch(response.data.tDispatch);
       } catch (err) {
         console.error("Error fetching data", err);
@@ -97,10 +97,10 @@ const [status, setStatus] = useState('');
   }
 
     try {
-      await axios.post("http://localhost:8000/tdispatch", formData);
+      await axios.post("http://localhost:5000/tdispatch", formData);
       setFormData({ StockId: "", Date: "", Qty: "", Driver: "", Location: "" });
 
-      const response = await axios.get("http://localhost:8000/tdispatch");
+      const response = await axios.get("http://localhost:5000/tdispatch");
       setTDispatch(response.data.tDispatch);
     } catch (err) {
       console.error("Failed to dispatch stock.");
@@ -111,8 +111,8 @@ const [status, setStatus] = useState('');
     const isConfirmed = window.confirm("Are you sure you want to delete this record?");
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/tdispatch/${id}`);
-        const response = await axios.get("http://localhost:8000/tdispatch");
+        await axios.delete(`http://localhost:5000/tdispatch/${id}`);
+        const response = await axios.get("http://localhost:5000/tdispatch");
         setTDispatch(response.data.tDispatch);
       } catch (err) {
         console.error("Error deleting record", err);
@@ -162,7 +162,7 @@ const [status, setStatus] = useState('');
   
   const sendEmail = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/email/send-email', {
+      const response = await axios.post('http://localhost:5000/api/email/send-email', {
         recipient,
         messageBody
       });

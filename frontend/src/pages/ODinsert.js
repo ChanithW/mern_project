@@ -82,7 +82,7 @@ export default function ODinsert() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8000/drive", formData);
+      const response = await axios.post("http://localhost:5000/drive", formData);
       console.log("Data inserted successfully:", response.data);
       alert("Delivery Record Added Successfully!");
       
